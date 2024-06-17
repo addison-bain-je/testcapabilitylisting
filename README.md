@@ -4,8 +4,8 @@ SharePoint Lists containing Test Capabilities, Equipment Listing and Personnel C
 Power Apps as Front-End for Users (Read-only) and Admins (CRUD)
 
 # Key Features
-Searchable galleries
-Custom page navigation for smaller sub-sets on gallery
-Implement Workarounds for 2000-rows limits
-Mass Data Upload Template
+<br>Searchable galleries
+<br>Custom page navigation for smaller sub-sets on gallery
+<brImplement Workarounds for 2000-rows limits
+<br>Mass Data Upload Template
 
