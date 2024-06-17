@@ -1,0 +1,1166 @@
+Scn_TestSchedule As screen:
+    Fill: =RGBA(237, 237, 237, 1)
+    LoadingSpinner: =LoadingSpinner.Data
+    LoadingSpinnerColor: =gblAppColors.Primary_BlueGrey
+    OnVisible: |-
+        =//Enable Loading Spinner
+        Set(VarLoadSpinner,true);
+        
+        
+        Reset(ComboBox_Filter_LabOffice_TestSchedule);
+        // clear temp collection
+        Clear(Col_Temp_TestScheduleList);
+        // reset the gallery
+        Refresh(List_TestSchedule);Reset(Gallery_TestSchedule);Reset(galHidden_TestSchedule);
+        //close dialog box
+        UpdateContext({Show_TestSchedule: false, New_TestSchedule:false, Edit_TestSchedule:false});
+        Set(varPageNumber_Gal_TestSchedule,1);
+        
+        
+        //Disable Loading Spinner
+        Set(VarLoadSpinner,false);
+
+    cmp_SideNav_Scn_TestSchedule As cmp_SideNav:
+        Default: ="Schedule"
+        Y: =68
+
+    cmp_TopBar_TestSchedule As cmp_TopBar:
+        ZIndex: =2
+
+    galHidden_TestSchedule As gallery.galleryVertical:
+        '#CopilotOverlayLabel': ="Filtered"
+        DelayItemLoading: =true
+        Height: =40
+        Items: |-
+            =If(!IsBlank(ComboBox_Filter_LabOffice_TestSchedule.Selected.Value),
+            Filter(SortByColumns(List_TestSchedule,"LabOffice",SortOrder.Ascending,"Team",SortOrder.Ascending),LabOffice=ComboBox_Filter_LabOffice_TestSchedule.Selected.Value),
+            SortByColumns(List_TestSchedule,"LabOffice",SortOrder.Ascending,"Team",SortOrder.Ascending))
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplateSize: =If(Self.Layout = Layout.Horizontal, Min(280, Self.Width - 60), Min(280, Self.Height - 60))
+        Visible: =false
+        Width: =127
+        X: =1239
+        Y: =728
+        ZIndex: =3
+
+    "Gallery_TestSchedule As gallery.'BrowseLayout_Vertical_ThreeTextVariant_ver5.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        BorderColor: =gblAppColors.Primary_BlueGrey
+        BorderThickness: =1
+        DelayItemLoading: =true
+        Height: =500
+        Items: |-
+            =If(
+            Icn_Next_GalTestSchedule.DisplayMode = DisplayMode.Disabled,
+            // Handling last set of records
+            LastN(
+            FirstN(
+            galHidden_TestSchedule.AllItems,
+            TbList_PaginationSize_Gal_TestSchedule.Selected.Value * varPageNumber_Gal_TestSchedule
+            ),
+            TbList_PaginationSize_Gal_TestSchedule.Selected.Value - (TbList_PaginationSize_Gal_TestSchedule.Selected.Value * varPageNumber_Gal_TestSchedule - CountRows(galHidden_TestSchedule.AllItems))
+            ),
+            LastN(
+            FirstN(
+            galHidden_TestSchedule.AllItems,
+            TbList_PaginationSize_Gal_TestSchedule.Selected.Value * varPageNumber_Gal_TestSchedule
+            ),
+            TbList_PaginationSize_Gal_TestSchedule.Selected.Value
+            )
+            )
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplatePadding: =0
+        TemplateSize: =67
+        Width: =1256
+        X: =97
+        Y: =210
+        ZIndex: =4
+
+        "Gal_TestSchedule_Attachments As gallery.'BrowseLayout_Vertical_OneTextVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
+            DelayItemLoading: =true
+            Height: =49
+            Items: =ThisItem.Attachments
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =1
+            TemplateSize: =27
+            Width: =230
+            X: =762
+            Y: =8
+            ZIndex: =1
+
+            Attachment_Name_TestSchedule As label:
+                Color: =RGBA(56, 96, 178, 1)
+                Height: =25
+                OnSelect: =Launch(ThisItem.AbsoluteUri)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =8
+                Text: =ThisItem.DisplayName
+                Width: =225
+                X: =5
+                Y: =2
+                ZIndex: =1
+
+        Gal_TestSchedule_LabOffice As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =47
+            LineHeight: =1
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.LabOffice
+            Width: =80
+            X: =40
+            Y: =11
+            ZIndex: =3
+
+        Gal_TestSchedule_Separator As rectangle:
+            Fill: =gblAppColors.Primary_White
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - Self.Height
+            ZIndex: =5
+
+        Gal_TestSchedule_Rect As rectangle:
+            Fill: =gblAppColors.Primary_Orange
+            Height: =Parent.TemplateHeight - Gal_TestSchedule_Separator.Height
+            OnSelect: =Select(Parent)
+            Visible: =ThisItem.IsSelected
+            Width: =4
+            ZIndex: =6
+
+        Gal_TestSchedule_Range As label:
+            Align: =Align.Center
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =21
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =Text(ThisItem.IssueDate,"mmm dd, yyyy")
+            Width: =100
+            X: =363
+            Y: =25
+            ZIndex: =8
+
+        Gal_TestSchedule_Checkbox As checkbox:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            CheckboxBorderColor: =gblAppColors.Primary_BlueGrey
+            CheckboxSize: =25
+            Color: =gblAppColors.Primary_BlueGrey
+            FocusedBorderThickness: =0
+            Font: =gblAppFonts.Body
+            Height: =40
+            OnCheck: =Collect(Col_Temp_TestScheduleList,ThisItem.ID)
+            OnSelect: =Select(Parent);
+            OnUncheck: =Remove(Col_Temp_TestScheduleList,LookUp(Col_Temp_TestScheduleList,Value=ThisItem.ID))
+            Text: =""
+            Width: =25
+            X: =8
+            Y: =13
+            ZIndex: =11
+
+        Ga_TestSchedule_PreparedBy As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =24
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.PreparedByName
+            Tooltip: =ThisItem.PreparedByEmail
+            Width: =130
+            X: =573
+            Y: =22
+            ZIndex: =12
+
+        Gal_TestSchedule_Remark As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =38
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.Remark
+            Tooltip: =ThisItem.Remark
+            VerticalAlign: =VerticalAlign.Top
+            X: =1042
+            Y: =14
+            ZIndex: =13
+
+        Gal_TestSchedule_Team As label:
+            Align: =Align.Center
+            Color: =RGBA(39, 113, 194, 1)
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =24
+            OnSelect: |-
+                =Select(Parent);
+                Set(Var_TestSchedule_Record,ThisItem);
+                UpdateContext({Show_TestSchedule: true, New_TestSchedule:false, Edit_TestSchedule:false});
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =10
+            Text: =ThisItem.Team
+            Width: =180
+            X: =136
+            Y: =22
+            ZIndex: =14
+
+        Gal_TestContact_PreparedBy_Photo As image:
+            Height: =25
+            Image: |-
+                =If(IsBlank(ThisItem.PreparedByEmail),Blank(),
+                IfError(Office365Users.UserPhotoMetadata(ThisItem.PreparedByEmail).HasPhoto,
+                'Person-Icon-Blue',
+                If(Office365Users.UserPhotoMetadata(ThisItem.PreparedByEmail).HasPhoto,Office365Users.UserPhotoV2(ThisItem.PreparedByEmail),'Person-Icon-Blue')))
+            OnSelect: =Select(Parent)
+            RadiusBottomLeft: =50
+            RadiusBottomRight: =50
+            RadiusTopLeft: =50
+            RadiusTopRight: =50
+            Width: =25
+            X: =539
+            Y: =21
+            ZIndex: =15
+
+    Container_Gallery_TestSchedule_Header As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =26
+        Width: =1256
+        X: =97
+        Y: =177
+        ZIndex: =5
+
+        Lbl_Gal_TestSchedule_Hdr_LabOffice As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Lab Office"
+            Width: =90
+            X: =27
+            ZIndex: =1
+
+        Lbl_Gal_TestSchedule_Hdr_Team As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Team"
+            Width: =120
+            X: =161
+            ZIndex: =2
+
+        Lbl_Gal_TestSchedule_Hdr_IssueDate As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Issue Date"
+            Width: =85
+            X: =374
+            ZIndex: =3
+
+        Lbl_Gal_TestSchedule_Hdr_PreparedBy As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Prepared By"
+            Width: =120
+            X: =548
+            ZIndex: =6
+
+        Lbl_Gal_TestSchedule_Hdr_Attachment As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Attachment"
+            Width: =110
+            X: =756
+            ZIndex: =7
+
+        Lbl_Gal_TestSchedule_Hdr_Remarks As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Remarks"
+            Width: =100
+            X: =1021
+            ZIndex: =8
+
+    Grp_Btns_TestSchedule As group:
+        Height: =5
+        Width: =5
+        X: =60
+        Y: =60
+        ZIndex: =15
+
+        Btn_TestSchedule_New As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =Reset(Gallery_TestSchedule);
+                UpdateContext({Show_TestSchedule: true, New_TestSchedule: true});
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Add New"
+            Tooltip: ="Add new testing capability record"
+            Visible: =Not(VarNotAdmin)
+            Width: =110
+            X: =97
+            Y: =135
+            ZIndex: =6
+
+        Btn_TestSchedule_Delete As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: =If(CountRows(Col_Temp_TestScheduleList)>0,DisplayMode.Edit,DisplayMode.Disabled)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =UpdateContext({Delete_TestSchedule: true})
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Delete"
+            Tooltip: ="Delete selected record(s)"
+            Visible: =Not(VarNotAdmin)
+            Width: =110
+            X: =220
+            Y: =135
+            ZIndex: =7
+
+    Container_Gal_TestSchedule_Search_Filters As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =45
+        Width: =1256
+        X: =97
+        Y: =80
+        ZIndex: =16
+
+        Lbl_Gal_Filter_LabOffice_TestSchedule As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            Size: =10
+            Text: ="Lab Office"
+            Width: =100
+            Y: =8
+            ZIndex: =1
+
+        ComboBox_Filter_LabOffice_TestSchedule As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronDisabledFill
+            ChevronFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            Color: =varAppStyles.ComboBox.Color
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["Value"]
+            Fill: =varAppStyles.ComboBox.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =28
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: =
+            Items: =Sort(Distinct(List_TestSchedule,LabOffice),Value,SortOrder.Ascending)
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["Value"]
+            SearchItems: =Search(Sort(Distinct(List_TestSchedule,LabOffice),Value,SortOrder.Ascending),ComboBox_Filter_LabOffice_TestSchedule.SearchText,Value)
+            SelectionFill: =varAppStyles.ComboBox.SelectionFill
+            SelectMultiple: =false
+            Size: =9
+            Width: =200
+            X: =103
+            Y: =8
+            ZIndex: =7
+
+        Btn_Reset_Filters_Gal_TestSchedule As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =varAppStyles.Button_Save.DisabledBorderColor
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderColor: =varAppStyles.Button_Save.FocusedBorderColor
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.White
+            HoverColor: =gblAppColors.White
+            HoverFill: =ColorFade(Self.Fill,-20%)
+            OnSelect: |-
+                =Reset(ComboBox_Filter_LabOffice_TestSchedule);
+                
+                Refresh(List_TestCapability);
+                Reset(galHidden_TestSchedule);
+                Reset(Gallery_TestSchedule);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Clear"
+            Tooltip: ="Reset Filters"
+            Width: =100
+            X: =1143
+            Y: =8
+            ZIndex: =11
+
+    Container_Dialog_Delete_TestSchedule As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.9)
+        Height: =768
+        Visible: =Delete_TestSchedule
+        Width: =1366
+        ZIndex: =17
+
+        Rect_BG_Dialog_Delete_TestSchedule As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =288
+            OnSelect: =
+            Width: =636
+            X: =315
+            Y: =230
+            ZIndex: =1
+
+        Icn_Close_Dialog_Delete_TestSchedule As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =// clear temp collection
+                Clear(Col_Temp_TestScheduleList);
+                // reset the gallery
+                Refresh(List_TestSchedule);
+                Reset(galHidden_TestSchedule);
+                Reset(Gallery_TestSchedule);
+                
+                //close dialog box
+                UpdateContext({Delete_TestSchedule: false});
+            Width: =40
+            X: =895
+            Y: =239
+            ZIndex: =2
+
+        Lbl_Delete_TestSchedule_Message As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Semibold
+            Height: =64
+            LineHeight: =1.5
+            Text: ="Are you sure you want to delete "& CountRows(Col_Temp_TestScheduleList) &" selected record(s) from the Lab Test Schedule list?"
+            Width: =462
+            X: =402
+            Y: =332
+            ZIndex: =3
+
+        Lbl_Delete_TestSchedule_Hdr As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            LineHeight: =1.5
+            Size: =18
+            Text: ="Confirm Deletion"
+            Width: =462
+            X: =402
+            Y: =256
+            ZIndex: =4
+
+        Btn_Delete_TestSchedule_Confirm As button:
+            BorderColor: =gblAppColors.Primary_Orange
+            DisabledBorderColor: =varAppStyles.Button_Reject.DisabledBorderColor
+            DisabledColor: =varAppStyles.Button_Reject.DisabledColor
+            DisabledFill: =varAppStyles.Button_Reject.DisabledFill
+            Fill: =gblAppColors.Primary_Orange
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Reject.Font
+            HoverFill: =ColorFade(gblAppColors.Primary_Orange,-20%)
+            OnSelect: |-
+                =// delete record(s) from sharepoint list
+                ForAll(Col_Temp_TestScheduleList,RemoveIf(List_TestSchedule,ID=Value));
+                // show a success notification
+                Notify($"{CountRows(Col_Temp_TestScheduleList)} record(s) deleted successfully",NotificationType.Success);
+                // clear temp collection
+                Clear(Col_Temp_TestScheduleList);
+                // reset the gallery
+                Refresh(List_TestSchedule);
+                Reset(galHidden_TestSchedule);
+                Reset(Gallery_TestSchedule);
+                //close dialog box
+                UpdateContext({Delete_TestSchedule: false });
+            PressedBorderColor: =varAppStyles.Button_Reject.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Reject.PressedColor
+            PressedFill: =varAppStyles.Button_Reject.PressedFill
+            Text: ="Confirm"
+            X: =553
+            Y: =426
+            ZIndex: =5
+
+    Container_TestSchedule As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.75)
+        Height: =768
+        Visible: =Show_TestSchedule
+        Width: =Max(App.Width,App.MinScreenWidth)
+        ZIndex: =18
+
+        Rect_BG_TestSchedule_Record As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =422
+            Width: =1204
+            X: =92
+            Y: =73
+            ZIndex: =1
+
+        Lbl_TestSchedule_PreparedBy As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Prepared By"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =298
+            ZIndex: =2
+
+        Lbl_TestSchedule_Record_IssueDate As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Issue Date"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =253
+            ZIndex: =3
+
+        Lb_TestSchedule_Record_Hdr As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =51
+            Size: =23
+            Text: ="Lab Test Schedule"
+            Width: =376
+            X: =506
+            Y: =82
+            ZIndex: =4
+
+        Lbl_TestSchedule_Record_LabOffice As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Lab Office *"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =161
+            ZIndex: =5
+
+        Lbl_TestSchedule_Record_Name As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Team"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =209
+            ZIndex: =6
+
+        Lbl__TestSchedule_Record_Remarks As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Remarks"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =140
+            Wrap: =false
+            X: =656
+            Y: =161
+            ZIndex: =10
+
+        Update_Attachment_Form_TestSchedule As form:
+            DataSource: =List_TestSchedule
+            DefaultMode: |
+                =FormMode.New
+            Height: =231
+            Width: =564
+            X: =645
+            Y: =195
+            ZIndex: =11
+
+            Update_Attachments_DataCard_TestSchedule As typedDataCard.attachmentsEditCard:
+                BorderColor: =gblAppColors.Primary_BlueGrey
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="{Attachments}"
+                Default: =Var_TestSchedule_Record.Attachments
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@List_TestCapability],DataSourceInfo.DisplayName,Attachments)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =139
+                Required: =false
+                Update: =Update_Attachment_DataCardValue_TestSchedule.Attachments
+                Width: =564
+                X: =0
+                Y: =0
+                ZIndex: =7
+
+                Update_Attachment_DataCardKey_TestSchedule As label:
+                    Color: =gblAppColors.Primary_BlueGrey
+                    FontWeight: =FontWeight.Semibold
+                    Height: =30
+                    Size: =11
+                    Text: ="Attachments *"
+                    Width: =140
+                    Wrap: =false
+                    X: =9
+                    Y: =40
+                    ZIndex: =1
+
+                Update_Attachment_DataCardValue_TestSchedule As attachments:
+                    AddAttachmentText: |-
+                        ="Attach file here. Avoid using special charcters (e.g. +, #, ?, @) in file name."
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    DisplayMode: =If(New_TestSchedule Or Edit_TestSchedule, DisplayMode.Edit, DisplayMode.View)
+                    FocusedBorderThickness: =2
+                    Font: =gblAppFonts.Body
+                    Height: =157
+                    IsInDataCard: =true
+                    Items: =Var_TestSchedule_Record.Attachments
+                    MaxAttachments: =5
+                    PaddingBottom: =5
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
+                    PressedFill: =gblAppColors.Primary_BlueGrey
+                    Size: =10
+                    Tooltip: =Parent.DisplayName
+                    Width: =380
+                    X: =163
+                    Y: =43
+                    ZIndex: =2
+
+                Update_Attachment_ErrorMessage_TestSchedule As label:
+                    AutoHeight: =true
+                    Height: =10
+                    Live: =Live.Assertive
+                    PaddingBottom: =0
+                    PaddingLeft: =0
+                    PaddingRight: =0
+                    PaddingTop: =0
+                    Text: =Parent.Error
+                    Visible: =Parent.DisplayMode=DisplayMode.Edit
+                    Width: =Parent.Width - 60
+                    X: =30
+                    Y: =Update_Attachment_DataCardValue_TestSchedule.Y + Update_Attachment_DataCardValue_TestSchedule.Height
+                    ZIndex: =3
+
+        Icn_Close_TestScheduleRecord As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =Set(Var_TestSchedule_Record,Blank());
+                UpdateContext({Show_TestSchedule: false, New_TestSchedule:false, Edit_TestSchedule:false});
+                
+                //Reset Controls
+                Reset(Dropdown_TestSchedule_LabOffice);
+                Reset(TextInput_TestSchedule_Team);
+                Reset(DatePicker_TestSchedule_LabOffice);
+                Reset(ComboBox_TestSchedule_PreparedBy);
+                Reset(TextInput_TestSchedule_Remark);
+                ResetForm(Update_Attachment_Form_TestSchedule);
+                Reset(Gal_TestSchedule_View_Attachments);
+            Tooltip: ="Close"
+            Width: =40
+            X: =1239
+            Y: =85
+            ZIndex: =12
+
+        TextInput_TestSchedule_Team As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestSchedule,Blank(),Var_TestSchedule_Record.Team)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestSchedule Or Edit_TestSchedule, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =30
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =300
+            X: =275
+            Y: =209
+            ZIndex: =13
+
+        TextInput_TestSchedule_Remark As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestSchedule,Blank(),Var_TestSchedule_Record.Remark)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestSchedule Or Edit_TestSchedule, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =57
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =807
+            Y: =164
+            ZIndex: =16
+
+        DatePicker_TestSchedule_LabOffice As datepicker:
+            BorderColor: =varAppStyles.DatePicker.BorderColor
+            Color: =varAppStyles.DatePicker.Color
+            DefaultDate: =If(New_TestSchedule,"",Var_TestSchedule_Record.IssueDate)
+            DisabledBorderColor: =varAppStyles.DatePicker.DisabledBorderColor
+            DisabledColor: =varAppStyles.DatePicker.DisabledColor
+            DisabledFill: =varAppStyles.DatePicker.DisabledFill
+            DisplayMode: =If(New_TestSchedule Or Edit_TestSchedule, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.DatePicker.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.DatePicker.Font
+            Format: ="mmm dd, yyyy"
+            Height: =30
+            IconBackground: =varAppStyles.DatePicker.IconBackground
+            InputTextPlaceholder: =//If(IsBlank(Self.SelectedDate), Text(Date(2001,12,31), Self.Format, Self.Language))
+            Size: =11
+            StartYear: =2010
+            Width: =200
+            X: =275
+            Y: =254
+            ZIndex: =17
+
+        Dropdown_TestSchedule_LabOffice As dropdown:
+            BorderColor: =varAppStyles.DropDown.BorderColor
+            ChevronBackground: =varAppStyles.DropDown.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.DropDown.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.DropDown.ChevronDisabledFill
+            ChevronHoverBackground: =varAppStyles.DropDown.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.DropDown.ChevronHoverFill
+            Default: =If(New_TestSchedule,Blank(),LookUp(Config_LabOffices,Title=Var_TestSchedule_Record.LabOffice).Title)
+            DisabledBorderColor: =varAppStyles.DropDown.DisabledBorderColor
+            DisabledColor: =varAppStyles.DropDown.DisabledColor
+            DisabledFill: =varAppStyles.DropDown.DisabledFill
+            DisplayMode: =If(New_TestSchedule Or Edit_TestSchedule, DisplayMode.Edit, DisplayMode.View)
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.DropDown.Font
+            Height: =30
+            HoverBorderColor: =varAppStyles.DropDown.HoverBorderColor
+            HoverColor: =varAppStyles.DropDown.HoverColor
+            HoverFill: =varAppStyles.DropDown.HoverFill
+            Items: =SortByColumns(Config_LabOffices.Title,"Title",SortOrder.Ascending)
+            PaddingLeft: =12
+            PressedBorderColor: =varAppStyles.DropDown.PressedBorderColor
+            PressedColor: =varAppStyles.DropDown.PressedColor
+            PressedFill: =varAppStyles.DropDown.PressedFill
+            SelectionFill: =gblAppColors.Primary_Sand
+            Size: =11
+            Width: =300
+            X: =275
+            Y: =161
+            ZIndex: =18
+
+        Btn_Save_TestSchedule_Confirm As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.GrayMediumDark
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: =If(IsBlank(Dropdown_TestSchedule_LabOffice.Selected.Title) Or CountRows(Update_Attachment_DataCardValue_TestSchedule.Attachments)=0,DisplayMode.Disabled,DisplayMode.Edit)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =If(New_TestSchedule,
+                
+                //Create new record in Test Schedule List
+                IfError(
+                Patch(List_TestSchedule,Defaults(List_TestSchedule),
+                {
+                        LabOffice: Dropdown_TestSchedule_LabOffice.Selected.Title,
+                        Team: TextInput_TestSchedule_Team.Text,
+                        IssueDate: DatePicker_TestSchedule_LabOffice.SelectedDate,
+                        PreparedByName: ComboBox_TestSchedule_PreparedBy.Selected.DisplayName,
+                        PreparedByEmail: Lower(ComboBox_TestSchedule_PreparedBy.Selected.Mail),
+                        Remark: TextInput_TestSchedule_Remark.Text},
+                        Update_Attachment_Form_TestSchedule.Updates
+                );
+                ,
+                // show error notification
+                Notify(
+                    "New record could not be added",NotificationType.Error
+                ),
+                // show success notification
+                Notify(
+                    "New record added successfully",NotificationType.Success
+                );
+                ),
+                //Save existing record in Test Schedule List
+                IfError(
+                Patch(List_TestSchedule, LookUp(List_TestSchedule, ID=Var_TestSchedule_Record.ID),
+                {
+                    LabOffice: Dropdown_TestSchedule_LabOffice.Selected.Title,
+                    Team: TextInput_TestSchedule_Team.Text,
+                    IssueDate: DatePicker_TestSchedule_LabOffice.SelectedDate,
+                    PreparedByName: ComboBox_TestSchedule_PreparedBy.Selected.DisplayName,
+                    PreparedByEmail: Lower(ComboBox_TestSchedule_PreparedBy.Selected.Mail),
+                    Remark: TextInput_TestSchedule_Remark.Text},
+                   Update_Attachment_Form_TestSchedule.Updates
+                   );
+                ,
+                // show error notification
+                Notify(
+                    "Record could not be updated",NotificationType.Error
+                ),
+                // show success notification
+                Notify(
+                    "Record has been updated successfully",NotificationType.Success
+                ))
+                );
+                
+                
+                //Reset Variables
+                Set(Var_TestSchedule_Record,Blank());
+                UpdateContext({Show_TestSchedule:false, New_TestSchedule:false, Edit_TestSchedule:false});
+                
+                //Refresh Data Source & Reset Gallery
+                Refresh(List_TestSchedule);
+                Reset(galHidden_TestSchedule);
+                Reset(Gallery_TestSchedule);
+                
+                //Reset Controls
+                Reset(Dropdown_TestSchedule_LabOffice);
+                Reset(TextInput_TestSchedule_Team);
+                Reset(DatePicker_TestSchedule_LabOffice);
+                Reset(ComboBox_TestSchedule_PreparedBy);
+                Reset(TextInput_TestSchedule_Remark);
+                ResetForm(Update_Attachment_Form_TestSchedule);
+                Reset(Gal_TestSchedule_View_Attachments);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            Text: ="Save"
+            Tooltip: ="Please ensure all the required fields * are filled up."
+            Visible: =New_TestSchedule Or Edit_TestSchedule
+            X: =614
+            Y: =426
+            ZIndex: =19
+
+        Icn_TestSchedule_Edit As icon.Edit:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =35
+            Icon: =Icon.Edit
+            OnSelect: |-
+                =UpdateContext({Edit_TestSchedule: true});
+            Tooltip: ="Edit Record"
+            Visible: =!New_TestSchedule
+            Width: =35
+            X: =891
+            Y: =90
+            ZIndex: =20
+
+        "Gal_TestSchedule_View_Attachments As gallery.'BrowseLayout_Vertical_OneTextVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
+            DelayItemLoading: =true
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =157
+            Items: =Var_TestSchedule_Record.Attachments
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =6
+            TemplateSize: =32
+            Visible: |-
+                =//true
+                !New_TestSchedule And !Edit_TestSchedule
+            Width: =380
+            X: =807
+            Y: =239
+            ZIndex: =21
+
+            Lbl_Attachment_Name_Link_1 As label:
+                Color: =gblAppColors.Primary_BlueGrey
+                FontWeight: =FontWeight.Semibold
+                Height: =30
+                OnSelect: =Launch(ThisItem.AbsoluteUri)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =10
+                Text: =ThisItem.DisplayName
+                Width: =360
+                X: =5
+                Y: =2
+                ZIndex: =1
+
+        ComboBox_TestSchedule_PreparedBy As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            Color: =varAppStyles.ComboBox.Color
+            DefaultSelectedItems: |-
+                =If(New_TestSchedule,Office365Users.SearchUser({searchTerm: VarUserEmail}),
+                    If(IsBlank(Var_TestSchedule_Record.PreparedByEmail),Blank(),
+                        Office365Users.SearchUser({searchTerm: Var_TestSchedule_Record.PreparedByEmail})))
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["DisplayName","JobTitle"]
+            DisplayMode: =If(New_TestSchedule Or Edit_TestSchedule, DisplayMode.Edit, DisplayMode.View)
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =30
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: ="Find person"
+            Items: |-
+                =Office365Users.SearchUser({searchTerm: ComboBox_TestSchedule_PreparedBy.SearchText})
+            PaddingLeft: =12
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["DisplayName"]
+            SearchItems: |-
+                =Search(Office365Users.SearchUser({searchTerm: ComboBox_TestSchedule_PreparedBy.SearchText}),ComboBox_TestSchedule_PreparedBy.SearchText,DisplayName)
+            SelectionFill: =gblAppColors.Primary_Sand
+            SelectMultiple: =false
+            Size: =11
+            Template: =ListItemTemplate.Person
+            Width: =200
+            X: =275
+            Y: =299
+            ZIndex: =22
+
+    Grp_Pagination_Gal_TestSchedule As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =22
+
+        Icn_Next_GalTestSchedule As icon.ArrowRight:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                TbList_PaginationSize_Gal_TestSchedule.Selected.Value * varPageNumber_Gal_TestSchedule <= CountRows(galHidden_TestSchedule.AllItems),
+                DisplayMode.Edit,
+                DisplayMode.Disabled
+                )
+            Height: =25
+            Icon: =Icon.ArrowRight
+            OnSelect: =Set(varPageNumber_Gal_TestSchedule,varPageNumber_Gal_TestSchedule+1)
+            Tooltip: ="Next Page"
+            Width: =25
+            X: =789
+            Y: =725
+            ZIndex: =8
+
+        Icn_Back_GalTestSchedule As icon.ArrowLeft:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                varPageNumber_Gal_TestCap = 1,
+                DisplayMode.Disabled,
+                DisplayMode.Edit
+                )
+            Height: =25
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Set(varPageNumber_Gal_TestSchedule,varPageNumber_Gal_TestSchedule-1)
+            Tooltip: ="Previous Page"
+            Width: =25
+            X: =607
+            Y: =725
+            ZIndex: =9
+
+        Icn_Left_GalTestSchedule As icon.ChevronLeft:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                varPageNumber_Gal_TestSchedule = 1,
+                DisplayMode.Disabled,
+                DisplayMode.Edit
+                )
+            Height: =17
+            Icon: =Icon.ChevronLeft
+            OnSelect: =Set(varPageNumber_Gal_TestSchedule,1)
+            Tooltip: ="Skip to start"
+            Width: =25
+            X: =575
+            Y: =730
+            ZIndex: =10
+
+        Icn_Right_GalTestSchedule As icon.ChevronRight:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                TbList_PaginationSize_Gal_TestSchedule.Selected.Value * varPageNumber_Gal_TestSchedule <= CountRows(galHidden_TestSchedule.AllItems),
+                DisplayMode.Edit,
+                DisplayMode.Disabled
+                )
+            Height: =17
+            Icon: =Icon.ChevronRight
+            OnSelect: =Set(varPageNumber_Gal_TestSchedule, RoundUp( CountRows(galHidden_TestSchedule.AllItems) / TbList_PaginationSize_Gal_TestSchedule.Selected.Value ,0) )
+            Tooltip: ="Skip to end"
+            Width: =25
+            X: =821
+            Y: =730
+            ZIndex: =11
+
+        Lbl_Pagination_GalTestSchedule As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =30
+            PaddingLeft: =3
+            PaddingRight: =3
+            Size: =9
+            Text: |-
+                ="Page " & varPageNumber_Gal_TestSchedule & " of " & If(
+                Mod(
+                CountRows(galHidden_TestSchedule.AllItems),
+                100
+                ) = 0,
+                RoundUp( CountRows(galHidden_TestSchedule.AllItems) / TbList_PaginationSize_Gal_TestSchedule.Selected.Value ,0) & "+ pages",
+                RoundUp( CountRows(galHidden_TestSchedule.AllItems) / TbList_PaginationSize_Gal_TestSchedule.Selected.Value,0) & " page(s)"
+                )
+            Width: =160
+            X: =630
+            Y: =721
+            ZIndex: =12
+
+        "TbList_PaginationSize_Gal_TestSchedule As 'Tab list'.pcfdataset":
+            BasePaletteColor: =RGBA(141, 229, 250, 1)
+            DefaultSelectedItems: =[50]
+            DisplayMode: =DisplayMode.Edit
+            Font: =gblAppFonts.Body
+            FontSize: =11
+            FontWeight: =FontWeight.Normal
+            Height: =29
+            Items: =[5,10,20,50]
+            OnSelect: =Set(varPageNumber_Gal_TestSchedule,1)
+            Size: ='TabList.Size'.Small
+            Width: =151
+            X: =151
+            Y: =722
+            ZIndex: =13
+
+        Lbl_Pagination_DisplayStart_TestSchedule As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =27
+            Size: =8
+            Text: |-
+                ="Display :"
+            Width: =60
+            X: =97
+            Y: =725
+            ZIndex: =14
+
+        Lbl_Pagination_DisplayEntries_TestSchedule As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =27
+            Size: =8
+            Text: ="entries"
+            Width: =60
+            X: =259
+            Y: =725
+            ZIndex: =15
+

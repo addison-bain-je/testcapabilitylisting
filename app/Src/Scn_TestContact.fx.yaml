@@ -1,0 +1,1265 @@
+Scn_TestContact As screen:
+    Fill: =RGBA(237, 237, 237, 1)
+    LoadingSpinner: =LoadingSpinner.Data
+    LoadingSpinnerColor: =gblAppColors.Primary_BlueGrey
+    OnVisible: |-
+        =//Enable Loading Spinner
+        Set(VarLoadSpinner,true);
+        
+        
+        Reset(ComboBox_Filter_TestContact_LabOffice);
+        // clear temp collection
+        Clear(Col_Temp_TestContactList);
+        // reset the gallery
+        Refresh(List_LabContact);Reset(galHidden_TestContact);Reset(Gallery_TestContact);
+        //close dialog box
+        UpdateContext({Show_TestContact: false, New_TestContact:false, Edit_TestContact:false});
+        Set(varPageNumber_Gal_TestContact,1);
+        
+        
+        //Disable Loading Spinner
+        Set(VarLoadSpinner,false);
+
+    cmp_SideNav_Scn_TestContact As cmp_SideNav:
+        Default: ="Contact"
+        Y: =68
+
+    cmp_TopBar_TestContact As cmp_TopBar:
+        ZIndex: =2
+
+    galHidden_TestContact As gallery.galleryVertical:
+        '#CopilotOverlayLabel': ="Filtered"
+        DelayItemLoading: =true
+        Height: =40
+        Items: |-
+            =If(!IsBlank(ComboBox_Filter_TestContact_LabOffice.Selected.Value),
+            Filter(SortByColumns(List_LabContact,"Lab",SortOrder.Ascending,"Team",SortOrder.Ascending),Lab=ComboBox_Filter_TestContact_LabOffice.Selected.Value),
+            SortByColumns(List_LabContact,"Lab",SortOrder.Ascending,"Team",SortOrder.Ascending))
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplateSize: =If(Self.Layout = Layout.Horizontal, Min(280, Self.Width - 60), Min(280, Self.Height - 60))
+        Visible: =false
+        Width: =127
+        X: =1239
+        Y: =728
+        ZIndex: =3
+
+    "Gallery_TestContact As gallery.'BrowseLayout_Vertical_ThreeTextVariant_ver5.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        BorderColor: =gblAppColors.Primary_BlueGrey
+        BorderThickness: =1
+        DelayItemLoading: =true
+        Height: =500
+        Items: |-
+            =If(
+            Icn_Next_GalTestContact.DisplayMode = DisplayMode.Disabled,
+            // Handling last set of records
+            LastN(
+            FirstN(
+            galHidden_TestContact.AllItems,
+            TbList_PaginationSize_Gal_TestContact.Selected.Value * varPageNumber_Gal_TestContact
+            ),
+            TbList_PaginationSize_Gal_TestContact.Selected.Value - (TbList_PaginationSize_Gal_TestContact.Selected.Value * varPageNumber_Gal_TestContact - CountRows(galHidden_TestContact.AllItems))
+            ),
+            LastN(
+            FirstN(
+            galHidden_TestContact.AllItems,
+            TbList_PaginationSize_Gal_TestContact.Selected.Value * varPageNumber_Gal_TestContact
+            ),
+            TbList_PaginationSize_Gal_TestContact.Selected.Value
+            )
+            )
+            
+            
+            /*
+            If(!IsBlank(ComboBox_Filter_TestContact_LabOffice.Selected.Value),
+            Filter(SortByColumns(List_LabContact,"Lab",SortOrder.Ascending,"Team",SortOrder.Ascending),Lab=ComboBox_Filter_TestContact_LabOffice.Selected.Value),
+            SortByColumns(List_LabContact,"Lab",SortOrder.Ascending,"Team",SortOrder.Ascending))
+            */
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplatePadding: =0
+        TemplateSize: =67
+        Width: =1256
+        X: =97
+        Y: =210
+        ZIndex: =4
+
+        Gal_TestContact_Team As label:
+            Align: =Align.Center
+            Color: =RGBA(39, 113, 194, 1)
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =24
+            OnSelect: |-
+                =Select(Parent);
+                Set(Var_TestContact_Record,ThisItem);
+                UpdateContext({Show_TestContact: true, New_TestContact:false, Edit_TestContact:false});
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =10
+            Text: =ThisItem.Team
+            Width: =120
+            X: =153
+            Y: =22
+            ZIndex: =1
+
+        Gal_TestContact_Office As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =47
+            LineHeight: =1
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.Lab
+            Width: =100
+            X: =41
+            Y: =11
+            ZIndex: =3
+
+        Gal_TestContact_Separator As rectangle:
+            Fill: =gblAppColors.Primary_White
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - Self.Height
+            ZIndex: =5
+
+        Gal_TestContact_Rect As rectangle:
+            Fill: =gblAppColors.Primary_Orange
+            Height: =Parent.TemplateHeight - Gal_TestContact_Separator.Height
+            OnSelect: =Select(Parent)
+            Visible: =ThisItem.IsSelected
+            Width: =4
+            ZIndex: =6
+
+        Gal_TestContact_ContactNo As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.ContactNo
+            Tooltip: =ThisItem.ContactNo
+            Width: =230
+            X: =317
+            Y: =19
+            ZIndex: =8
+
+        Gal_TestContact_Checkbox As checkbox:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            CheckboxBorderColor: =gblAppColors.Primary_BlueGrey
+            CheckboxSize: =25
+            Color: =gblAppColors.Primary_BlueGrey
+            FocusedBorderThickness: =0
+            Font: =gblAppFonts.Body
+            Height: =40
+            OnCheck: =Collect(Col_Temp_TestContactList,ThisItem.ID)
+            OnSelect: =Select(Parent);
+            OnUncheck: =Remove(Col_Temp_TestContactList,LookUp(Col_Temp_TestContactList,Value=ThisItem.ID))
+            Text: =""
+            Width: =25
+            X: =9
+            Y: =14
+            ZIndex: =11
+
+        "Gal_TestContact_ContactPerson As gallery.'BrowseLayout_Vertical_OneTextVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
+            DelayItemLoading: =true
+            Height: =60
+            Items: =ThisItem.ContactName
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =3
+            TemplateSize: =25
+            Width: =240
+            X: =574
+            Y: =4
+            ZIndex: =12
+
+            Lbl_Gal_TestContact_ContactPerson As label:
+                Color: =RGBA(0, 0, 0, 1)
+                Height: =23
+                OnSelect: =
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =9
+                Text: =ThisItem.DisplayName
+                Tooltip: |-
+                    =ThisItem.Email&"
+                    "&ThisItem.JobTitle&"
+                    "&ThisItem.Department
+                X: =42
+                Y: =3
+                ZIndex: =1
+
+            Img_ContactPerson As image:
+                Height: =25
+                Image: =ThisItem.Picture
+                OnSelect: =Select(Parent)
+                RadiusBottomLeft: =25
+                RadiusBottomRight: =25
+                RadiusTopLeft: =25
+                RadiusTopRight: =25
+                Tooltip: |-
+                    =ThisItem.Email&"
+                    "&ThisItem.JobTitle&"
+                    "&ThisItem.Department
+                Width: =25
+                X: =6
+                Y: =3
+                ZIndex: =2
+
+        "Gal_TestContact_CCHead As gallery.'BrowseLayout_Vertical_OneTextVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
+            DelayItemLoading: =true
+            Height: =60
+            Items: =ThisItem.CCHeadName
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =3
+            TemplateSize: =25
+            Width: =240
+            X: =865
+            Y: =4
+            ZIndex: =13
+
+            Lbl_Gal_TestContact_CCHead_Name As label:
+                Color: =RGBA(0, 0, 0, 1)
+                Height: =23
+                OnSelect: =
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =9
+                Text: =ThisItem.DisplayName
+                Tooltip: |-
+                    =ThisItem.Email&"
+                    "&ThisItem.JobTitle&"
+                    "&ThisItem.Department
+                X: =44
+                Y: =3
+                ZIndex: =1
+
+            Img_CCHead As image:
+                Height: =25
+                Image: =ThisItem.Picture
+                OnSelect: =Select(Parent)
+                RadiusBottomLeft: =25
+                RadiusBottomRight: =25
+                RadiusTopLeft: =25
+                RadiusTopRight: =25
+                Tooltip: |-
+                    =ThisItem.Email&"
+                    "&ThisItem.JobTitle&"
+                    "&ThisItem.Department
+                Width: =25
+                X: =6
+                Y: =3
+                ZIndex: =2
+
+    Container_Gallery_TestContact As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =26
+        Width: =1256
+        X: =97
+        Y: =177
+        ZIndex: =5
+
+        Lbl_Gal_TestContact_Lab As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Lab Office"
+            Width: =90
+            X: =18
+            ZIndex: =1
+
+        Lbl_Gal_TestContact_Team As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Team"
+            Width: =113
+            X: =156
+            ZIndex: =2
+
+        Lbl_Gal_TestContact_ContactNo As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Contact No."
+            Width: =100
+            X: =334
+            ZIndex: =3
+
+        Lbl_Gal_TestContact_JEContactPerson As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="JE Contact Person"
+            Width: =139
+            X: =608
+            ZIndex: =4
+
+        Lbl_Gal_TestContact_JECCHead As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="JE Cost Center Head"
+            Width: =204
+            X: =872
+            ZIndex: =5
+
+    Container_Gal_TestContact_Search_Filters As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =45
+        Width: =1256
+        X: =97
+        Y: =80
+        ZIndex: =6
+
+        Lbl_Gal_TestContact_Filter_LabOffice As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            Size: =10
+            Text: ="Lab Office"
+            Width: =100
+            Y: =8
+            ZIndex: =1
+
+        ComboBox_Filter_TestContact_LabOffice As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronDisabledFill
+            ChevronFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            Color: =varAppStyles.ComboBox.Color
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["Value"]
+            Fill: =varAppStyles.ComboBox.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =28
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: =
+            Items: =Sort(Distinct(List_LabContact,Lab),Value,SortOrder.Ascending)
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["Value"]
+            SearchItems: =Search(Sort(Distinct(List_LabContact,Lab),Value,SortOrder.Ascending),ComboBox_Filter_TestContact_LabOffice.SearchText,Value)
+            SelectionFill: =varAppStyles.ComboBox.SelectionFill
+            SelectMultiple: =false
+            Size: =9
+            Width: =200
+            X: =103
+            Y: =8
+            ZIndex: =7
+
+        Btn_Reset_Filters_Gal_TestContact As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =varAppStyles.Button_Save.DisabledBorderColor
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderColor: =varAppStyles.Button_Save.FocusedBorderColor
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.White
+            HoverColor: =gblAppColors.White
+            HoverFill: =ColorFade(Self.Fill,-20%)
+            OnSelect: |-
+                =Reset(ComboBox_Filter_TestContact_LabOffice);
+                
+                Refresh(List_LabContact);
+                Reset(galHidden_TestContact);
+                Reset(Gallery_TestContact);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Clear"
+            Tooltip: ="Reset Filters"
+            Width: =100
+            X: =1143
+            Y: =8
+            ZIndex: =8
+
+    Grp_Btns_TestContact As group:
+        Height: =5
+        Width: =5
+        X: =60
+        Y: =60
+        ZIndex: =9
+
+        Btn_TestContact_New As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =Reset(Gallery_TestContact);
+                UpdateContext({Show_TestContact: true, New_TestContact: true});
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Add New"
+            Tooltip: ="Add new testing capability record"
+            Visible: =Not(VarNotAdmin)
+            Width: =110
+            X: =97
+            Y: =135
+            ZIndex: =7
+
+        Btn_TestContact_Delete As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: =If(CountRows(Col_Temp_TestContactList)>0,DisplayMode.Edit,DisplayMode.Disabled)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =UpdateContext({Delete_TestContact: true})
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Delete"
+            Tooltip: ="Delete selected record(s)"
+            Visible: =Not(VarNotAdmin)
+            Width: =110
+            X: =220
+            Y: =135
+            ZIndex: =8
+
+    Container_Dialog_Delete_TestContact As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.9)
+        Height: =768
+        Visible: =Delete_TestContact
+        Width: =1366
+        ZIndex: =17
+
+        Rect_BG_Dialog_Delete_TestContact As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =288
+            OnSelect: =
+            Visible: =Delete_TestContact
+            Width: =636
+            X: =315
+            Y: =230
+            ZIndex: =1
+
+        Icn_Close_Dialog_Delete_TestContact As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =// clear temp collection
+                Clear(Col_Temp_TestContactList);
+                // reset the gallery
+                Refresh(List_LabContact);Reset(Gallery_TestContact);
+                //close dialog box
+                UpdateContext({Delete_TestContact: false });
+            Visible: =Delete_TestContact
+            Width: =40
+            X: =895
+            Y: =239
+            ZIndex: =2
+
+        Lbl_Delete_TestContact_Confirm As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Semibold
+            Height: =64
+            LineHeight: =1.5
+            Text: ="Are you sure you want to delete "& CountRows(Col_Temp_TestContactList) &" selected record(s) from the Global Lab Contact List?"
+            Visible: =Delete_TestContact
+            Width: =443
+            X: =411
+            Y: =334
+            ZIndex: =3
+
+        Lbl_Delete_TesContact_Confirm As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            LineHeight: =1.5
+            Size: =18
+            Text: ="Confirm Deletion"
+            Visible: =Delete_TestContact
+            Width: =462
+            X: =402
+            Y: =256
+            ZIndex: =4
+
+        Btn_Delete_TestContact_Confirm As button:
+            BorderColor: =gblAppColors.Primary_Orange
+            DisabledBorderColor: =varAppStyles.Button_Reject.DisabledBorderColor
+            DisabledColor: =varAppStyles.Button_Reject.DisabledColor
+            DisabledFill: =varAppStyles.Button_Reject.DisabledFill
+            Fill: =gblAppColors.Primary_Orange
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Reject.Font
+            HoverFill: =ColorFade(gblAppColors.Primary_Orange,-20%)
+            OnSelect: |-
+                =// delete record(s) from sharepoint list
+                ForAll(Col_Temp_TestContactList,RemoveIf(List_LabContact,ID=Value));
+                // show a success notification
+                Notify($"{CountRows(Col_Temp_TestContactList)} record(s) deleted successfully",NotificationType.Success);
+                // clear temp collection
+                Clear(Col_Temp_TestContactList);
+                // reset the gallery
+                Refresh(List_LabContact);Reset(Gallery_TestContact);
+                //close dialog box
+                UpdateContext({Delete_TestContact: false });
+            PressedBorderColor: =varAppStyles.Button_Reject.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Reject.PressedColor
+            PressedFill: =varAppStyles.Button_Reject.PressedFill
+            Text: ="Confirm"
+            Visible: =Delete_TestContact
+            X: =553
+            Y: =426
+            ZIndex: =5
+
+    Container_TestContact_Record As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.75)
+        Height: =768
+        Visible: =Show_TestContact
+        Width: =Max(App.Width,App.MinScreenWidth)
+        ZIndex: =18
+
+        Rect_BG_TestContact_Record As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =491
+            Width: =1204
+            X: =92
+            Y: =122
+            ZIndex: =1
+
+        Lbl_TestContact_Hdr As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =51
+            Size: =23
+            Text: ="Lab Contact"
+            Width: =432
+            X: =489
+            Y: =133
+            ZIndex: =2
+
+        Lbl_TestContact_LabOffice As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Lab Office"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =120
+            Y: =202
+            ZIndex: =3
+
+        Lbl_TestContact_Team As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Team *"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =687
+            Y: =202
+            ZIndex: =4
+
+        Lbl_TestContact_ContactPerson As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="JE Contact Person"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =117
+            Y: =253
+            ZIndex: =5
+
+        Lbl_TestContact_ContactNo As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Contact No"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =120
+            Y: =339
+            ZIndex: =7
+
+        Lbl_TestContact_ContactEmail As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =50
+            Size: =11
+            Text: |-
+                ="JE Contact
+                Email Address"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =140
+            Wrap: =false
+            X: =687
+            Y: =256
+            ZIndex: =8
+
+        Lbl_TestContact_Social As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =68
+            Size: =11
+            Text: |-
+                ="Social messaging 
+                contact (Whatsapp, 
+                WeChat )"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =152
+            Wrap: =false
+            X: =685
+            Y: =339
+            ZIndex: =9
+
+        Lbl_TestContact_CCHead As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Cost Center Head"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =160
+            Wrap: =false
+            X: =117
+            Y: =440
+            ZIndex: =11
+
+        Icn_Close_TestContact As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =Set(Var_TestContact_Record,Blank());
+                UpdateContext({Show_TestContact: false, New_TestContact:false, Edit_TestContact:false});
+                
+                //Reset Controls
+                Reset(Dropdown_TestContact_LabOffice);
+                Reset(TextInput_TestContact_Team);
+                Reset(TextInput_TestContact_Social);
+                Reset(TextInput_TestContact_ContactNo);
+                Reset(ComboBox_TestContact_ContactPerson);
+                Reset(ComboBox_TestContact_CCHead);
+            Tooltip: ="Close"
+            Width: =40
+            X: =1239
+            Y: =134
+            ZIndex: =13
+
+        TextInput_TestContact_Team As text:
+            BorderColor: =If(IsBlank(Self.Text),Color.DarkRed,varAppStyles.TextInput.BorderColor)
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestContact,Blank(),Var_TestContact_Record.Team)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestContact Or Edit_TestContact, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =30
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =834
+            Y: =202
+            ZIndex: =14
+
+        TextInput_TestContact_ContactNo As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestContact,Blank(),Var_TestContact_Record.ContactNo)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestContact Or Edit_TestContact, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =68
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =275
+            Y: =339
+            ZIndex: =16
+
+        TextInput_TestContact_ContactEmail As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =Concat(ComboBox_TestContact_ContactPerson.SelectedItems, Lower(Mail), " ; ")
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =DisplayMode.View
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =70
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =834
+            Y: =251
+            ZIndex: =18
+
+        TextInput_TestContact_Social As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestContact,Blank(),Var_TestContact_Record.SocialMessaging)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestContact Or Edit_TestContact, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =68
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =834
+            Y: =339
+            ZIndex: =20
+
+        Dropdown_TestContact_LabOffice As dropdown:
+            BorderColor: =varAppStyles.DropDown.BorderColor
+            ChevronBackground: =varAppStyles.DropDown.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.DropDown.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.DropDown.ChevronDisabledFill
+            ChevronHoverBackground: =varAppStyles.DropDown.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.DropDown.ChevronHoverFill
+            Default: =If(New_TestContact,Blank(),LookUp(Config_LabOffices,Title=Var_TestContact_Record.Lab).Title)
+            DisabledBorderColor: =varAppStyles.DropDown.DisabledBorderColor
+            DisabledColor: =varAppStyles.DropDown.DisabledColor
+            DisabledFill: =varAppStyles.DropDown.DisabledFill
+            DisplayMode: =If(New_TestContact Or Edit_TestContact, DisplayMode.Edit, DisplayMode.View)
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.DropDown.Font
+            Height: =30
+            HoverBorderColor: =varAppStyles.DropDown.HoverBorderColor
+            HoverColor: =varAppStyles.DropDown.HoverColor
+            HoverFill: =varAppStyles.DropDown.HoverFill
+            Items: =SortByColumns(Config_LabOffices.Title,"Title",SortOrder.Ascending)
+            PressedBorderColor: =varAppStyles.DropDown.PressedBorderColor
+            PressedColor: =varAppStyles.DropDown.PressedColor
+            PressedFill: =varAppStyles.DropDown.PressedFill
+            SelectionFill: =gblAppColors.Primary_Sand
+            Size: =11
+            Width: =380
+            X: =275
+            Y: =202
+            ZIndex: =22
+
+        Btn_Save_TestContact_Edit As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.GrayMediumDark
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: |
+                =//If(IsBlank(Dropdown_TestContact_LabOffice.Selected.Title) Or IsBlank(TextInput_TestContact_Team.Text) Or IsBlank(TextInput_TestContact_ContactNo) Or IsBlank(ComboBox_TestContact_ContactPerson.Selected.DisplayName) Or IsBlank(ComboBox_TestContact_CCHead.Selected.DisplayName),DisplayMode.Disabled,DisplayMode.Edit)
+                If(IsBlank(TextInput_TestContact_Team.Text),DisplayMode.Disabled,DisplayMode.Edit)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =If(New_TestContact,
+                
+                //Create new record in Lab Contact List
+                IfError(
+                Patch(List_LabContact,Defaults(List_LabContact),
+                {
+                        Lab: Dropdown_TestContact_LabOffice.Selected.Title,
+                        Team: TextInput_TestContact_Team.Text,
+                        ContactNo: TextInput_TestContact_ContactNo.Text,
+                        SocialMessaging: TextInput_TestContact_Social.Text,
+                        ContactName: ForAll(
+                            ComboBox_TestContact_ContactPerson.SelectedItems,
+                            {
+                            Claims: "i:0#.f|membership|" & Lower(Mail),
+                            Department: "",
+                            DisplayName: DisplayName,
+                            Email: Mail,
+                            JobTitle: ".",
+                            Picture: "."
+                            }
+                        ),
+                        ContactEmail: TextInput_TestContact_ContactEmail.Text,
+                        CCHeadName: ForAll(
+                            ComboBox_TestContact_CCHead.SelectedItems,
+                            {
+                            Claims: "i:0#.f|membership|" & Lower(Mail),
+                            Department: "",
+                            DisplayName: DisplayName,
+                            Email: Mail,
+                            JobTitle: ".",
+                            Picture: "."
+                            }
+                        ),
+                        CCHeadEmail: TextInput_TestContact_CCHead_Email.Text
+                }
+                );
+                ,
+                // show error notification
+                Notify(
+                    FirstError.Message,NotificationType.Error
+                ),
+                // show success notification
+                Notify(
+                    "New record added successfully",NotificationType.Success
+                );
+                ),
+                //Save existing record in Lab Contact List
+                IfError(
+                Patch(List_LabContact, LookUp(List_LabContact, ID=Var_TestContact_Record.ID),
+                {
+                        Lab: Dropdown_TestContact_LabOffice.Selected.Title,
+                        Team: TextInput_TestContact_Team.Text,
+                        ContactNo: TextInput_TestContact_ContactNo.Text,
+                        SocialMessaging: TextInput_TestContact_Social.Text,
+                        ContactName: ForAll(
+                            ComboBox_TestContact_ContactPerson.SelectedItems,
+                            {
+                            Claims: "i:0#.f|membership|" & Lower(Mail),
+                            Department: "",
+                            DisplayName: DisplayName,
+                            Email: Mail,
+                            JobTitle: ".",
+                            Picture: "."
+                            }
+                        ),
+                        ContactEmail: TextInput_TestContact_ContactEmail.Text,
+                        CCHeadName: ForAll(
+                            ComboBox_TestContact_CCHead.SelectedItems,
+                            {
+                            Claims: "i:0#.f|membership|" & Lower(Mail),
+                            Department: "",
+                            DisplayName: DisplayName,
+                            Email: Mail,
+                            JobTitle: ".",
+                            Picture: "."
+                            }
+                        ),
+                        CCHeadEmail: TextInput_TestContact_CCHead_Email.Text
+                }
+                );
+                ,
+                // show error notification
+                Notify(
+                    FirstError.Message,NotificationType.Error
+                ),
+                // show success notification
+                Notify(
+                    "Record has been updated successfully",NotificationType.Success
+                ))
+                );
+                
+                //Reset Variables
+                Set(Var_TestContact_Record,Blank());
+                UpdateContext({Show_TestContact:false, New_TestContact:false, Edit_TestContact:false});
+                
+                //Refresh Data Source & Reset Gallery
+                Refresh(List_LabContact);
+                Reset(Gallery_TestContact);
+                
+                //Reset Controls
+                Reset(Dropdown_TestContact_LabOffice);
+                Reset(TextInput_TestContact_Team);
+                Reset(TextInput_TestContact_Social);
+                Reset(TextInput_TestContact_ContactNo);
+                Reset(ComboBox_TestContact_ContactPerson);
+                Reset(ComboBox_TestContact_CCHead);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            Text: ="Save"
+            Tooltip: ="Please ensure all the required fields * are filled up."
+            Visible: =New_TestContact Or Edit_TestContact
+            X: =614
+            Y: =547
+            ZIndex: =23
+
+        Icn_TestContact_Edit As icon.Edit:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =35
+            Icon: =Icon.Edit
+            OnSelect: |-
+                =UpdateContext({Edit_TestContact: true});
+            Tooltip: ="Edit Record"
+            Visible: =!New_TestContact
+            Width: =35
+            X: =819
+            Y: =139
+            ZIndex: =24
+
+        TextInput_TestContact_CCHead_Email As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =Concat(ComboBox_TestContact_CCHead.SelectedItems, Lower(Mail), " ; ")
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =DisplayMode.View
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =70
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =834
+            Y: =438
+            ZIndex: =26
+
+        Lbl_TestContact_CCHead_Email As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =50
+            Size: =11
+            Text: |-
+                ="Cost Center Head
+                Email Address"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =146
+            Wrap: =false
+            X: =688
+            Y: =438
+            ZIndex: =27
+
+        ComboBox_TestContact_ContactPerson As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            Color: =varAppStyles.ComboBox.Color
+            DefaultSelectedItems: |-
+                =If(New_TestContact,Blank(),
+                ForAll(Var_TestContact_Record.ContactName,
+                {
+                    Claims:"i:0#.f|membership|",
+                    Department:"",
+                    DisplayName: DisplayName,
+                    Mail:Email,
+                    JobTitle:".",
+                    Picture:"."
+                }))
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["DisplayName","JobTitle"]
+            DisplayMode: =If(New_TestContact Or Edit_TestContact, DisplayMode.Edit, DisplayMode.View)
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =35
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: ="Find person"
+            Items: |-
+                =Office365Users.SearchUser({searchTerm: ComboBox_TestContact_ContactPerson.SearchText})
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["DisplayName"]
+            SearchItems: |-
+                =Search(Office365Users.SearchUser({searchTerm: ComboBox_TestContact_ContactPerson.SearchText}),ComboBox_TestContact_ContactPerson.SearchText,DisplayName)
+            SelectionFill: =gblAppColors.Primary_Sand
+            Size: =11
+            Template: =ListItemTemplate.Person
+            Width: =378
+            X: =277
+            Y: =251
+            ZIndex: =28
+
+        ComboBox_TestContact_CCHead As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            Color: =varAppStyles.ComboBox.Color
+            DefaultSelectedItems: |-
+                =If(New_TestContact,Blank(),
+                ForAll(Var_TestContact_Record.CCHeadName,
+                {
+                    Claims:"i:0#.f|membership|",
+                    Department:"",
+                    DisplayName: DisplayName,
+                    Mail:Email,
+                    JobTitle:".",
+                    Picture:"."
+                }))
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["DisplayName","JobTitle"]
+            DisplayMode: =If(New_TestContact Or Edit_TestContact, DisplayMode.Edit, DisplayMode.View)
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =35
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: ="Find person"
+            Items: |-
+                =Office365Users.SearchUser({searchTerm: ComboBox_TestContact_CCHead.SearchText})
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["DisplayName"]
+            SearchItems: |-
+                =Search(Office365Users.SearchUser({searchTerm: ComboBox_TestContact_CCHead.SearchText}),ComboBox_TestContact_CCHead.SearchText,DisplayName)
+            SelectionFill: =gblAppColors.Primary_Sand
+            Size: =11
+            Template: =ListItemTemplate.Person
+            Width: =378
+            X: =275
+            Y: =438
+            ZIndex: =29
+
+    Grp_Pagination_Gal_TestContact As group:
+        Height: =5
+        Width: =5
+        X: =20
+        Y: =11
+        ZIndex: =18
+
+        Icn_Next_GalTestContact As icon.ArrowRight:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                TbList_PaginationSize_Gal_TestContact.Selected.Value * varPageNumber_Gal_TestContact <= CountRows(galHidden_TestContact.AllItems),
+                DisplayMode.Edit,
+                DisplayMode.Disabled
+                )
+            Height: =25
+            Icon: =Icon.ArrowRight
+            OnSelect: =Set(varPageNumber_Gal_TestContact,varPageNumber_Gal_TestContact+1)
+            Tooltip: ="Next Page"
+            Width: =25
+            X: =789
+            Y: =725
+            ZIndex: =9
+
+        Icn_Back_GalTestContact As icon.ArrowLeft:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                varPageNumber_Gal_TestContact = 1,
+                DisplayMode.Disabled,
+                DisplayMode.Edit
+                )
+            Height: =25
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Set(varPageNumber_Gal_TestContact,varPageNumber_Gal_TestContact-1)
+            Tooltip: ="Previous Page"
+            Width: =25
+            X: =607
+            Y: =725
+            ZIndex: =10
+
+        Icn_Left_GalTestContact As icon.ChevronLeft:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                varPageNumber_Gal_TestContact = 1,
+                DisplayMode.Disabled,
+                DisplayMode.Edit
+                )
+            Height: =17
+            Icon: =Icon.ChevronLeft
+            OnSelect: =Set(varPageNumber_Gal_TestContact,1)
+            Tooltip: ="Skip to start"
+            Width: =25
+            X: =575
+            Y: =730
+            ZIndex: =11
+
+        Icn_Right_GalTestContact As icon.ChevronRight:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                TbList_PaginationSize_Gal_TestContact.Selected.Value * varPageNumber_Gal_TestContact <= CountRows(galHidden_TestContact.AllItems),
+                DisplayMode.Edit,
+                DisplayMode.Disabled
+                )
+            Height: =17
+            Icon: =Icon.ChevronRight
+            OnSelect: =Set(varPageNumber_Gal_TestContact, RoundUp( CountRows(galHidden_TestContact.AllItems) / TbList_PaginationSize_Gal_TestContact.Selected.Value ,0) )
+            Tooltip: ="Skip to end"
+            Width: =25
+            X: =821
+            Y: =730
+            ZIndex: =12
+
+        Lbl_Pagination_GalTestContact As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =30
+            PaddingLeft: =3
+            PaddingRight: =3
+            Size: =9
+            Text: |-
+                ="Page " & varPageNumber_Gal_TestContact & " of " & If(
+                Mod(
+                CountRows(galHidden_TestContact.AllItems),
+                100
+                ) = 0,
+                RoundUp( CountRows(galHidden_TestContact.AllItems) / TbList_PaginationSize_Gal_TestContact.Selected.Value ,0) & "+ pages",
+                RoundUp( CountRows(galHidden_TestContact.AllItems) / TbList_PaginationSize_Gal_TestContact.Selected.Value,0) & " page(s)"
+                )
+            Width: =160
+            X: =630
+            Y: =721
+            ZIndex: =13
+
+        "TbList_PaginationSize_Gal_TestContact As 'Tab list'.pcfdataset":
+            BasePaletteColor: =RGBA(141, 229, 250, 1)
+            DefaultSelectedItems: =[50]
+            DisplayMode: =DisplayMode.Edit
+            Font: =gblAppFonts.Body
+            FontSize: =11
+            FontWeight: =FontWeight.Normal
+            Height: =29
+            Items: =[5,10,20,50]
+            OnSelect: =Set(varPageNumber_Gal_TestCap,1)
+            Size: ='TabList.Size'.Small
+            Width: =151
+            X: =151
+            Y: =722
+            ZIndex: =14
+
+        Lbl_Pagination_DisplayStart_TestContact As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =27
+            Size: =8
+            Text: |-
+                ="Display :"
+            Width: =60
+            X: =97
+            Y: =725
+            ZIndex: =15
+
+        Lbl_Pagination_DisplayEntries_TestContact As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =27
+            Size: =8
+            Text: ="entries"
+            Width: =60
+            X: =259
+            Y: =725
+            ZIndex: =16
+

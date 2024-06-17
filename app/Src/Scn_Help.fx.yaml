@@ -1,0 +1,55 @@
+Scn_Help As screen:
+    Fill: =RGBA(237, 237, 237, 1)
+    LoadingSpinner: =LoadingSpinner.Controls
+    LoadingSpinnerColor: =gblAppColors.Primary_BlueGrey
+    OnVisible: |-
+        =//Enable Loading Spinner
+        Set(VarLoadSpinner,true);
+        
+        
+        //Disable Loading Spinner
+        Set(VarLoadSpinner,false);
+
+    RichTextEditor_HelpPage As richTextEditor:
+        BorderColor: =RGBA(26, 26, 26, 1)
+        Default: =LookUp(Config_General,Title="Online_Help_Profile",Rich_Text_Value)
+        DisplayMode: =If(Not(VarNotAdmin),DisplayMode.Edit,DisplayMode.View)
+        Height: =560
+        Size: =12
+        Width: =1236
+        X: =100
+        Y: =134
+        ZIndex: =1
+
+    Btn_HelpPage_Save As button:
+        BorderColor: =varAppStyles.Button_Save.BorderColor
+        DisabledBorderColor: =varAppStyles.Button_Save.DisabledBorderColor
+        DisabledColor: =varAppStyles.Button_Save.DisabledColor
+        DisabledFill: =varAppStyles.Button_Save.DisabledFill
+        Fill: =varAppStyles.Button_Save.Fill
+        FocusedBorderColor: =varAppStyles.Button_Save.FocusedBorderColor
+        Height: =31
+        HoverBorderColor: =gblAppColors.Primary_LightSand
+        HoverColor: =gblAppColors.Primary_LightSand
+        OnSelect: |-
+            =Patch(Config_General, LookUp(Config_General,Title="Online_Help_Profile",ThisRecord),
+            { Rich_Text_Value: RichTextEditor_HelpPage.HtmlText}) 
+        PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+        PressedColor: =varAppStyles.Button_Save.PressedColor
+        PressedFill: =varAppStyles.Button_Save.PressedFill
+        Size: =13
+        Text: ="Save"
+        Visible: =Not(VarNotAdmin)
+        Width: =94
+        X: =100
+        Y: =92
+        ZIndex: =2
+
+    cmp_SideNav_Scn_Help As cmp_SideNav:
+        Default: ="Help"
+        Y: =68
+        ZIndex: =3
+
+    cmp_TopBar_Help As cmp_TopBar:
+        ZIndex: =4
+

@@ -1,0 +1,44 @@
+cmp_TopBar As CanvasComponent:
+    Fill: =gblAppColors.Primary_LightSand
+    Height: =70
+    Items: =colSidebarMenu
+    UserProfileEmail: =VarUserEmail
+    UserProfileImage: =IfError(VarUserImage,'Person-Icon-Blue',VarUserImage)
+    UserProfileName: =VarUserFullName
+    Width: =Max(App.Width, App.MinScreenWidth)
+    X: =0
+    Y: =0
+    ZIndex: =1
+
+    lbl_TopNav_Title As label:
+        Align: =Align.Center
+        Font: ="Helvatica, Segoe UI"
+        FontWeight: =FontWeight.Bold
+        Height: =70
+        Size: =28
+        Text: =LookUp(cmp_TopBar.Items,Screen.Name=App.ActiveScreen.Name,Tooltip)
+        Width: =917
+        X: =243
+        ZIndex: =1
+
+    Img_JELogo As image:
+        Height: =70
+        Image: =JE_Logo
+        X: =35
+        ZIndex: =2
+
+    Img_UserProfile As image:
+        Height: =55
+        Image: =cmp_TopBar.UserProfileImage
+        RadiusBottomLeft: =50
+        RadiusBottomRight: =50
+        RadiusTopLeft: =50
+        RadiusTopRight: =50
+        Tooltip: |-
+            =Proper(cmp_TopBar.UserProfileName)&"
+            "&cmp_TopBar.UserProfileEmail
+        Width: =55
+        X: =1293
+        Y: =7
+        ZIndex: =3
+

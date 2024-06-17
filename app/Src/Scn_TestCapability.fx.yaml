@@ -1,0 +1,1828 @@
+Scn_TestCapability As screen:
+    Fill: =RGBA(237, 237, 237, 1)
+    LoadingSpinner: =LoadingSpinner.Data
+    LoadingSpinnerColor: =gblAppColors.Primary_BlueGrey
+    OnVisible: |-
+        =//Enable Loading Spinner
+        Set(VarLoadSpinner,true);
+        
+        Reset(ComboBox_Filter_LabOffice);
+        Reset(ComboBox_Filter_TestName);
+        Reset(ComboBox_Filter_Standard);
+        Reset(ComboBox_Filter_TestMethod);
+        Reset(TextInput_Search);
+        
+        Refresh(List_TestCapability);
+        Reset(galHidden_TestCap);
+        Reset(Gallery_TestCap);
+        
+        UpdateContext({Show_TestCap: false, New_TestCap:false, Edit_TestCap:false});
+        Set(varPageNumber_Gal_TestCap,1);
+        
+        
+        //Disable Loading Spinner
+        Set(VarLoadSpinner,false);
+
+    cmp_SideNav_Scn_TestCapability As cmp_SideNav:
+        Default: ="Capability"
+        Y: =68
+
+    cmp_TopBar_TestCapability As cmp_TopBar:
+        ZIndex: =2
+
+    galHidden_TestCap As gallery.galleryVertical:
+        '#CopilotOverlayLabel': ="Filtered"
+        DelayItemLoading: =true
+        Height: =40
+        Items: |-
+            =If(IsBlank(TextInput_Search.Text),
+            Filter(
+                SortByColumns(List_TestCapability,"LabOffice",SortOrder.Ascending,"TestName",SortOrder.Ascending),
+                And(
+                    Or(IsBlank(ComboBox_Filter_LabOffice.SelectedItems),
+                        IsEmpty(ComboBox_Filter_LabOffice.SelectedItems),
+                            LabOffice = ComboBox_Filter_LabOffice.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_Standard.SelectedItems),
+                        IsEmpty(ComboBox_Filter_Standard.SelectedItems),
+                            Standard in ComboBox_Filter_Standard.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestName.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestName.SelectedItems),
+                            TestName in ComboBox_Filter_TestName.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestMethod.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestMethod.SelectedItems),
+                            TestMethod in ComboBox_Filter_TestMethod.Selected.Value)
+                )
+            ),
+            Search(Filter(
+                SortByColumns(List_TestCapability,"LabOffice",SortOrder.Ascending,"TestName",SortOrder.Ascending),
+                And(
+                    Or(IsBlank(ComboBox_Filter_LabOffice.SelectedItems),
+                        IsEmpty(ComboBox_Filter_LabOffice.SelectedItems),
+                            LabOffice = ComboBox_Filter_LabOffice.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_Standard.SelectedItems),
+                        IsEmpty(ComboBox_Filter_Standard.SelectedItems),
+                            Standard in ComboBox_Filter_Standard.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestName.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestName.SelectedItems),
+                            TestName in ComboBox_Filter_TestName.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestMethod.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestMethod.SelectedItems),
+                            TestMethod in ComboBox_Filter_TestMethod.Selected.Value)
+            )),TextInput_Search.Text,LabOffice,TestName,TestMethod,TestDescription,Standard,KeyEquipment,TestRange,Remark)
+            )
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplateSize: =If(Self.Layout = Layout.Horizontal, Min(280, Self.Width - 60), Min(280, Self.Height - 60))
+        Visible: =false
+        Width: =127
+        X: =1239
+        Y: =728
+        ZIndex: =3
+
+    "Gallery_TestCap As gallery.'BrowseLayout_Vertical_ThreeTextVariant_ver5.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        BorderColor: =gblAppColors.Primary_BlueGrey
+        BorderThickness: =1
+        DelayItemLoading: =true
+        Height: =472
+        Items: |-
+            =//Search(List_TestCapability, ComboBox_Filter_LabOffice.Selected.Value, ComboBox_Filter_Standard.Selected.Value,"LabOffice","Standard")
+            
+            /*
+            If(IsBlank(TextInput_Search.Text),
+            Filter(
+                List_TestCapability,
+                And(
+                    Or(IsBlank(ComboBox_Filter_LabOffice.SelectedItems),
+                        IsEmpty(ComboBox_Filter_LabOffice.SelectedItems),
+                            LabOffice = ComboBox_Filter_LabOffice.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_Standard.SelectedItems),
+                        IsEmpty(ComboBox_Filter_Standard.SelectedItems),
+                            Standard in ComboBox_Filter_Standard.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestName.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestName.SelectedItems),
+                            TestName in ComboBox_Filter_TestName.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestMethod.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestMethod.SelectedItems),
+                            TestMethod in ComboBox_Filter_TestMethod.Selected.Value)
+                )
+            ),
+            Search(Filter(
+                List_TestCapability,
+                And(
+                    Or(IsBlank(ComboBox_Filter_LabOffice.SelectedItems),
+                        IsEmpty(ComboBox_Filter_LabOffice.SelectedItems),
+                            LabOffice = ComboBox_Filter_LabOffice.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_Standard.SelectedItems),
+                        IsEmpty(ComboBox_Filter_Standard.SelectedItems),
+                            Standard in ComboBox_Filter_Standard.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestName.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestName.SelectedItems),
+                            TestName in ComboBox_Filter_TestName.Selected.Value),
+                    Or(IsBlank(ComboBox_Filter_TestMethod.SelectedItems),
+                        IsEmpty(ComboBox_Filter_TestMethod.SelectedItems),
+                            TestMethod in ComboBox_Filter_TestMethod.Selected.Value)
+            )),TextInput_Search.Text,"LabOffice","TestName","TestMethod","TestDescription","Standard","KeyEquipment","TestRange","Remark")
+            )
+            */
+            
+            
+            If(
+            Icn_Next_GalTestCap.DisplayMode = DisplayMode.Disabled,
+            // Handling last set of records
+            LastN(
+            FirstN(
+            galHidden_TestCap.AllItems,
+            TbList_PaginationSize_Gal_TestCap.Selected.Value * varPageNumber_Gal_TestCap
+            ),
+            TbList_PaginationSize_Gal_TestCap.Selected.Value - (TbList_PaginationSize_Gal_TestCap.Selected.Value * varPageNumber_Gal_TestCap - CountRows(galHidden_TestCap.AllItems))
+            ),
+            LastN(
+            FirstN(
+            galHidden_TestCap.AllItems,
+            TbList_PaginationSize_Gal_TestCap.Selected.Value * varPageNumber_Gal_TestCap
+            ),
+            TbList_PaginationSize_Gal_TestCap.Selected.Value
+            )
+            )
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplatePadding: =0
+        TemplateSize: =67
+        Width: =1256
+        X: =97
+        Y: =248
+        ZIndex: =4
+
+        "Gal_TestCap_Attachments As gallery.'BrowseLayout_Vertical_OneTextVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
+            DelayItemLoading: =true
+            Height: =55
+            Items: =ThisItem.Attachments
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =0
+            TemplateSize: =27
+            Width: =125
+            X: =1014
+            Y: =9
+            ZIndex: =1
+
+            Attachment_Name As label:
+                Color: =RGBA(56, 96, 178, 1)
+                Height: =25
+                OnSelect: =Launch(ThisItem.AbsoluteUri)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =8
+                Text: =ThisItem.DisplayName
+                VerticalAlign: =VerticalAlign.Top
+                Width: =120
+                X: =8
+                Y: =2
+                ZIndex: =1
+
+        Gal_TestCap_TestName As label:
+            Color: =RGBA(39, 113, 194, 1)
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =21
+            OnSelect: |-
+                =Select(Parent);
+                Set(Var_TestCap_Record,ThisItem);
+                UpdateContext({Show_TestCap: true, New_TestCap:false, Edit_TestCap:false});
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =10
+            Text: =ThisItem.TestName
+            Width: =280
+            X: =122
+            Y: =10
+            ZIndex: =1
+
+        Gal_TestCap_TestDescription As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =27
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.TestDescription
+            Tooltip: =ThisItem.TestDescription
+            VerticalAlign: =VerticalAlign.Top
+            Width: =280
+            X: =123
+            Y: =31
+            ZIndex: =2
+
+        Gal_TestCap_LabOffice As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =47
+            LineHeight: =1
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.LabOffice
+            Width: =68
+            X: =40
+            Y: =11
+            ZIndex: =3
+
+        Gal_TestCap_Separator As rectangle:
+            Fill: =gblAppColors.Primary_White
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - Self.Height
+            ZIndex: =5
+
+        Gal_TestCap_Rect As rectangle:
+            Fill: =gblAppColors.Primary_Orange
+            Height: =Parent.TemplateHeight - Gal_TestCap_Separator.Height
+            OnSelect: =Select(Parent)
+            Visible: =ThisItem.IsSelected
+            Width: =4
+            ZIndex: =6
+
+        Gal_TestCap_Range As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.TestRange
+            Tooltip: ="ThisItem.TestRange"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =170
+            X: =422
+            Y: =10
+            ZIndex: =8
+
+        Gal_TestCap_Standard As label:
+            Align: =Align.Center
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.Standard
+            Tooltip: =ThisItem.Standard
+            Width: =125
+            X: =609
+            Y: =8
+            ZIndex: =9
+
+        Gal_TestCap_TestMethod As label:
+            Align: =Align.Center
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.TestMethod
+            Tooltip: =ThisItem.TestMethod
+            Width: =115
+            X: =745
+            Y: =8
+            ZIndex: =10
+
+        Gal_TestCap_Checkbox As checkbox:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            CheckboxBorderColor: =gblAppColors.Primary_BlueGrey
+            CheckboxSize: =25
+            Color: =gblAppColors.Primary_BlueGrey
+            FocusedBorderThickness: =0
+            Font: =gblAppFonts.Body
+            Height: =40
+            OnCheck: =Collect(Col_Temp_TestCapList,ThisItem.ID)
+            OnSelect: =Select(Parent);
+            OnUncheck: =Remove(Col_Temp_TestCapList,LookUp(Col_Temp_TestCapList,Value=ThisItem.ID))
+            Text: =""
+            Width: =25
+            X: =8
+            Y: =13
+            ZIndex: =11
+
+        Gal_TestCap_Remark As label:
+            Align: =Align.Center
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.Remark
+            Tooltip: =ThisItem.Remark
+            VerticalAlign: =VerticalAlign.Top
+            Width: =86
+            X: =1152
+            Y: =8
+            ZIndex: =13
+
+        Gal_TestCap_Equipment As label:
+            Align: =Align.Center
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =50
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: =ThisItem.KeyEquipment
+            Tooltip: =ThisItem.KeyEquipment
+            VerticalAlign: =VerticalAlign.Top
+            Width: =115
+            X: =890
+            Y: =8
+            ZIndex: =14
+
+    Container_Gallery_TestCap_Header As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =26
+        Width: =1256
+        X: =97
+        Y: =219
+        ZIndex: =5
+
+        Lbl_Gal_Hdr_LabOffice As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Lab Office"
+            Width: =90
+            X: =18
+            ZIndex: =1
+
+        Lbl_Gal_Hdr_TestName As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Test Name / Test Description"
+            Width: =250
+            X: =107
+            ZIndex: =2
+
+        Lbl_Gal_Hdr_Range As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Test Range"
+            Width: =85
+            X: =446
+            ZIndex: =3
+
+        Lbl_Gal_Hdr_Standard As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Standard"
+            Width: =75
+            X: =625
+            ZIndex: =4
+
+        Lbl_Gal_Hdr_TestMethod As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Test Method / WI"
+            Width: =140
+            X: =737
+            ZIndex: =5
+
+        Lbl_Gal_Hdr_Equipment As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Key Equipment"
+            Width: =120
+            X: =890
+            ZIndex: =6
+
+        Lbl_Gal_Hdr_Attachment As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Attachments"
+            Width: =110
+            X: =1017
+            ZIndex: =7
+
+        Lbl_Gal_Hdr_Remarks As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =31
+            Size: =10
+            Text: ="Remarks"
+            Width: =100
+            X: =1148
+            ZIndex: =8
+
+    Container_Gal_TestCap_Search_Filters As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =83
+        Width: =1256
+        X: =97
+        Y: =80
+        ZIndex: =6
+
+        Lbl_Gal_Filter_LabOffice As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            Size: =10
+            Text: ="Lab Office"
+            Width: =100
+            Y: =8
+            ZIndex: =1
+
+        Lbl_Gal_Filter_TestName As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            Size: =10
+            Text: ="Test Name"
+            Width: =120
+            X: =331
+            Y: =7
+            ZIndex: =2
+
+        Lbl_Gal_Filter_Standard As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            Size: =10
+            Text: ="Standard"
+            Width: =79
+            X: =818
+            Y: =7
+            ZIndex: =3
+
+        Lbl_Gal_Filter_TestMethod As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            Size: =10
+            Text: ="Test Method"
+            Width: =100
+            Y: =48
+            ZIndex: =4
+
+        Lbl_Gal_Filter_FullSearch As label:
+            Align: =Align.Right
+            FontWeight: =FontWeight.Bold
+            Height: =27
+            Size: =11
+            Text: ="Full Search"
+            Width: =120
+            X: =460
+            Y: =45
+            ZIndex: =5
+
+        TextInput_Search As text:
+            Default: =""
+            Height: =28
+            HintText: ="Search by keywords"
+            Size: =9
+            Width: =490
+            X: =583
+            Y: =45
+            ZIndex: =6
+
+        ComboBox_Filter_LabOffice As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronDisabledFill
+            ChevronFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            Color: =varAppStyles.ComboBox.Color
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["Value"]
+            Fill: =varAppStyles.ComboBox.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =28
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: =
+            Items: =Sort(Distinct(List_TestCapability,LabOffice),Value,SortOrder.Ascending)
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["Value"]
+            SearchItems: =Search(Sort(Distinct(List_TestCapability,LabOffice),Value,SortOrder.Ascending),ComboBox_Filter_LabOffice.SearchText,Value)
+            SelectionFill: =varAppStyles.ComboBox.SelectionFill
+            SelectMultiple: =false
+            Size: =9
+            Width: =200
+            X: =103
+            Y: =8
+            ZIndex: =7
+
+        ComboBox_Filter_TestName As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronFill: =varAppStyles.ComboBox.ChevronFill
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["Value"]
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =28
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: =
+            Items: =Sort(Distinct(List_TestCapability,TestName),Value,SortOrder.Ascending)
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["Value"]
+            SearchItems: =Search(Sort(Distinct(List_TestCapability,TestName),Value,SortOrder.Ascending),ComboBox_Filter_TestName.SearchText,Value)
+            SelectionFill: =varAppStyles.ComboBox.SelectionFill
+            SelectMultiple: =false
+            Size: =9
+            Width: =350
+            X: =457
+            Y: =9
+            ZIndex: =8
+
+        ComboBox_Filter_Standard As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronDisabledFill
+            ChevronFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["Value"]
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =28
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            HoverFill: =varAppStyles.ComboBox.HoverFill
+            InputTextPlaceholder: =
+            Items: =Sort(Distinct(List_TestCapability,Standard),Value,SortOrder.Ascending)
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["Value"]
+            SearchItems: =Search(Sort(Distinct(List_TestCapability,Standard),Value,SortOrder.Ascending),ComboBox_Filter_Standard.SearchText,Value)
+            SelectionFill: =varAppStyles.ComboBox.SelectionFill
+            SelectMultiple: =false
+            Size: =9
+            Width: =330
+            X: =906
+            Y: =9
+            ZIndex: =9
+
+        ComboBox_Filter_TestMethod As combobox:
+            BorderColor: =varAppStyles.ComboBox.BorderColor
+            ChevronBackground: =varAppStyles.ComboBox.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.ComboBox.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.ComboBox.ChevronDisabledFill
+            ChevronFill: =varAppStyles.ComboBox.ChevronFill
+            ChevronHoverBackground: =varAppStyles.ComboBox.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.ComboBox.ChevronHoverFill
+            DisabledBorderColor: =varAppStyles.ComboBox.DisabledBorderColor
+            DisabledColor: =varAppStyles.ComboBox.DisabledColor
+            DisabledFill: =varAppStyles.ComboBox.DisabledFill
+            DisplayFields: =["Value"]
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.ComboBox.Font
+            Height: =28
+            HoverBorderColor: =varAppStyles.ComboBox.HoverBorderColor
+            HoverColor: =varAppStyles.ComboBox.HoverColor
+            InputTextPlaceholder: =
+            Items: =Sort(Distinct(List_TestCapability,TestMethod),Value,SortOrder.Ascending)
+            PaddingBottom: =2
+            PaddingLeft: =2
+            PaddingRight: =2
+            PaddingTop: =2
+            PressedBorderColor: =varAppStyles.ComboBox.PressedBorderColor
+            PressedColor: =varAppStyles.ComboBox.PressedColor
+            PressedFill: =varAppStyles.ComboBox.PressedFill
+            SearchFields: =["Value"]
+            SearchItems: =Search(Sort(Distinct(List_TestCapability,TestMethod),Value,SortOrder.Ascending),ComboBox_Filter_TestMethod.SearchText,Value)
+            SelectionFill: =varAppStyles.ComboBox.SelectionFill
+            SelectMultiple: =false
+            Size: =9
+            Width: =350
+            X: =101
+            Y: =45
+            ZIndex: =10
+
+        Btn_Reset_Filters_Gal_TestCap As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =varAppStyles.Button_Save.DisabledBorderColor
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderColor: =varAppStyles.Button_Save.FocusedBorderColor
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.White
+            HoverColor: =gblAppColors.White
+            HoverFill: =ColorFade(Self.Fill,-20%)
+            OnSelect: |-
+                =Reset(ComboBox_Filter_LabOffice);
+                Reset(ComboBox_Filter_TestName);
+                Reset(ComboBox_Filter_Standard);
+                Reset(ComboBox_Filter_TestMethod);
+                Reset(TextInput_Search);
+                
+                Refresh(List_TestCapability);
+                Reset(galHidden_TestCap);
+                Reset(Gallery_TestCap);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Clear"
+            Tooltip: ="Reset Filters"
+            Width: =100
+            X: =1135
+            Y: =45
+            ZIndex: =11
+
+    Grp_Btns_TestCap As group:
+        Height: =5
+        Width: =5
+        X: =60
+        Y: =60
+        ZIndex: =15
+
+        Btn_TestCap_New As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =Reset(Gallery_TestCap);
+                UpdateContext({Show_TestCap: true, New_TestCap: true});
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Add New"
+            Tooltip: ="Add new testing capability record"
+            Visible: =Not(VarNotAdmin)
+            Width: =110
+            X: =97
+            Y: =177
+            ZIndex: =7
+
+        Btn_TestCap_Delete As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: =If(CountRows(Col_Temp_TestCapList)>0,DisplayMode.Edit,DisplayMode.Disabled)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =UpdateContext({Delete_TestCap: true})
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Delete"
+            Tooltip: ="Delete selected record(s)"
+            Visible: =Not(VarNotAdmin)
+            Width: =110
+            X: =220
+            Y: =177
+            ZIndex: =8
+
+        Btn_TestCap_Import As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.Primary_LightSand
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: =If(CountRows(Col_Temp_TestCapList)>0,DisplayMode.Edit,DisplayMode.Disabled)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.Button_Save.HoverColor
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =UpdateContext({Import_TestCap: true})
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Size: =10
+            Text: ="Import"
+            Tooltip: ="Import file attachments for selected record(s)"
+            Visible: |-
+                =false
+                //Not(VarNotAdmin)
+            Width: =110
+            X: =344
+            Y: =177
+            ZIndex: =9
+
+    Container_TestCap_Record As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.75)
+        Height: =768
+        Visible: =Show_TestCap
+        Width: =Max(App.Width,App.MinScreenWidth)
+        ZIndex: =18
+
+        Rect_BG_TestCap_Record As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =615
+            Width: =1204
+            X: =92
+            Y: =73
+            ZIndex: =1
+
+        Lbl_TestCap_Record_Hdr As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =51
+            Size: =23
+            Text: ="Global Test Capability"
+            Width: =432
+            X: =489
+            Y: =84
+            ZIndex: =2
+
+        Lbl_TestCap_Record_LabOffice As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Lab Office"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =153
+            ZIndex: =3
+
+        Lbl_TestCap_Record_Name As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Test Name *"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =201
+            ZIndex: =4
+
+        Lbl_TestCap_Record_Description As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Test Description"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =249
+            ZIndex: =5
+
+        Lbl_TestCap_Record_RevisedDate As label:
+            Align: =Align.Right
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Revised Date"
+            Width: =166
+            Wrap: =false
+            X: =865
+            Y: =148
+            ZIndex: =6
+
+        Lbl_TestCap_Record_Range As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Test Range"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =332
+            ZIndex: =7
+
+        Lbl_TestCap_Record_Standard As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Standard"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =140
+            Wrap: =false
+            X: =680
+            Y: =333
+            ZIndex: =8
+
+        Lbl_TestCap_Record_Requipment As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Key Equipment"
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =false
+            X: =127
+            Y: =465
+            ZIndex: =9
+
+        Lbl_TestCap_Record_Method As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Test Method (WIs)"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =140
+            Wrap: =false
+            X: =680
+            Y: =379
+            ZIndex: =10
+
+        Lbl_TestCap_Record_Remarks As label:
+            Color: =gblAppColors.Primary_BlueGrey
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            Size: =11
+            Text: ="Remarks"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =140
+            Wrap: =false
+            X: =680
+            Y: =419
+            ZIndex: =11
+
+        Update_Attachment_Form As form:
+            DataSource: =List_TestCapability
+            DefaultMode: |
+                =FormMode.New
+            Height: =231
+            Width: =564
+            X: =662
+            Y: =446
+            ZIndex: =12
+
+            Update_Attachments_DataCard As typedDataCard.attachmentsEditCard:
+                BorderColor: =gblAppColors.Primary_BlueGrey
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="{Attachments}"
+                Default: =Var_TestCap_Record.Attachments
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@List_TestCapability],DataSourceInfo.DisplayName,Attachments)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =139
+                Required: =false
+                Update: =Update_Attachment_DataCardValue.Attachments
+                Width: =564
+                X: =0
+                Y: =0
+                ZIndex: =7
+
+                Update_Attachment_DataCardKey As label:
+                    Color: =gblAppColors.Primary_BlueGrey
+                    FontWeight: =FontWeight.Semibold
+                    Height: =30
+                    Size: =11
+                    Text: ="Attachments"
+                    Width: =140
+                    Wrap: =false
+                    X: =19
+                    Y: =42
+                    ZIndex: =1
+
+                Update_Attachment_DataCardValue As attachments:
+                    AddAttachmentText: |-
+                        ="Attach file here. Avoid using special charcters (e.g. +, #, ?, @) in file name."
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+                    FocusedBorderThickness: =2
+                    Font: =gblAppFonts.Body
+                    Height: =157
+                    IsInDataCard: =true
+                    Items: =Var_TestCap_Record.Attachments
+                    MaxAttachments: =5
+                    PaddingBottom: =5
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
+                    PressedFill: =gblAppColors.Primary_BlueGrey
+                    Size: =10
+                    Tooltip: =Parent.DisplayName
+                    Width: =380
+                    X: =163
+                    Y: =43
+                    ZIndex: =2
+
+                Update_Attachment_ErrorMessage As label:
+                    AutoHeight: =true
+                    Height: =10
+                    Live: =Live.Assertive
+                    PaddingBottom: =0
+                    PaddingLeft: =0
+                    PaddingRight: =0
+                    PaddingTop: =0
+                    Text: =Parent.Error
+                    Visible: =Parent.DisplayMode=DisplayMode.Edit
+                    Width: =Parent.Width - 60
+                    X: =30
+                    Y: =Update_Attachment_DataCardValue.Y + Update_Attachment_DataCardValue.Height
+                    ZIndex: =3
+
+        Icn_Close_TestCapRecord As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =Set(Var_TestCap_Record,Blank());
+                UpdateContext({Show_TestCap: false, New_TestCap:false, Edit_TestCap:false});
+                
+                //Reset Controls
+                Reset(Dropdown_TestCap_LabOffice);
+                Reset(TextInput_TestCap_Name);
+                Reset(TextInput_TestCap_Description);
+                Reset(TextInput_TestCap_Range);
+                Reset(TextInput_TestCap_Equipment);
+                Reset(TextInput_TestCap_Standard);
+                Reset(TextInput_TestCap_Method);
+                Reset(TextInput_TestCap_Remark);
+                Reset(TextInput_TestCap_ModifiedDate);
+                ResetForm(Update_Attachment_Form);
+            Tooltip: ="Close"
+            Width: =40
+            X: =1239
+            Y: =85
+            ZIndex: =13
+
+        TextInput_TestCap_Name As text:
+            BorderColor: =If(IsBlank(Self.Text),Color.DarkRed,varAppStyles.TextInput.BorderColor)
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.TestName)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =30
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =275
+            Y: =201
+            ZIndex: =14
+
+        TextInput_TestCap_ModifiedDate As text:
+            Align: =Align.Right
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.Modified)
+            DisplayMode: =DisplayMode.View
+            Height: =30
+            Size: =11
+            Width: =166
+            X: =1039
+            Y: =148
+            ZIndex: =15
+
+        TextInput_TestCap_Range As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.TestRange)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =117
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =275
+            Y: =332
+            ZIndex: =16
+
+        TextInput_TestCap_Description As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.TestDescription)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =71
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =930
+            X: =275
+            Y: =248
+            ZIndex: =17
+
+        TextInput_TestCap_Standard As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.Standard)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =28
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =824
+            Y: =334
+            ZIndex: =18
+
+        TextInput_TestCap_Method As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.TestMethod)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =30
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =824
+            Y: =379
+            ZIndex: =19
+
+        TextInput_TestCap_Equipment As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.KeyEquipment)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =128
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =273
+            Y: =465
+            ZIndex: =20
+
+        TextInput_TestCap_Remark As text:
+            BorderColor: =varAppStyles.TextInput.BorderColor
+            Color: =varAppStyles.TextInput.Color
+            Default: =If(New_TestCap,Blank(),Var_TestCap_Record.Remark)
+            DisabledBorderColor: =varAppStyles.TextInput.DisabledBorderColor
+            DisabledColor: =varAppStyles.TextInput.DisabledColor
+            DisabledFill: =varAppStyles.TextInput.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            Fill: =varAppStyles.TextInput.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.TextInput.Font
+            Height: =57
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverColor: =varAppStyles.TextInput.HoverColor
+            HoverFill: =varAppStyles.TextInput.HoverFill
+            Mode: =TextMode.MultiLine
+            PressedBorderColor: =varAppStyles.TextInput.PressedBorderColor
+            PressedColor: =varAppStyles.TextInput.PressedColor
+            PressedFill: =varAppStyles.TextInput.PressedFill
+            Size: =11
+            Width: =380
+            X: =824
+            Y: =419
+            ZIndex: =21
+
+        Dropdown_TestCap_LabOffice As dropdown:
+            BorderColor: =varAppStyles.DropDown.BorderColor
+            ChevronBackground: =varAppStyles.DropDown.ChevronBackground
+            ChevronDisabledBackground: =varAppStyles.DropDown.ChevronDisabledBackground
+            ChevronDisabledFill: =varAppStyles.DropDown.ChevronDisabledFill
+            ChevronHoverBackground: =varAppStyles.DropDown.ChevronHoverBackground
+            ChevronHoverFill: =varAppStyles.DropDown.ChevronHoverFill
+            Default: =If(New_TestCap,Blank(),LookUp(Config_LabOffices,Title=Var_TestCap_Record.LabOffice).Title)
+            DisabledBorderColor: =varAppStyles.DropDown.DisabledBorderColor
+            DisabledColor: =varAppStyles.DropDown.DisabledColor
+            DisabledFill: =varAppStyles.DropDown.DisabledFill
+            DisplayMode: =If(New_TestCap Or Edit_TestCap, DisplayMode.Edit, DisplayMode.View)
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.DropDown.Font
+            Height: =30
+            HoverBorderColor: =varAppStyles.DropDown.HoverBorderColor
+            HoverColor: =varAppStyles.DropDown.HoverColor
+            HoverFill: =varAppStyles.DropDown.HoverFill
+            Items: =SortByColumns(Config_LabOffices.Title,"Title",SortOrder.Ascending)
+            PressedBorderColor: =varAppStyles.DropDown.PressedBorderColor
+            PressedColor: =varAppStyles.DropDown.PressedColor
+            PressedFill: =varAppStyles.DropDown.PressedFill
+            SelectionFill: =gblAppColors.Primary_Sand
+            Size: =11
+            Width: =380
+            X: =275
+            Y: =153
+            ZIndex: =22
+
+        Btn_Save_TestCap_Confirm As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.GrayMediumDark
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: |-
+                =//If(IsBlank(Dropdown_TestCap_LabOffice.Selected.Title) Or IsBlank(TextInput_TestCap_Name.Text) Or IsBlank(TextInput_TestCap_Description.Text) Or IsBlank(TextInput_TestCap_Range.Text) Or IsBlank(TextInput_TestCap_Equipment.Text),DisplayMode.Disabled,DisplayMode.Edit)
+                If(IsBlank(TextInput_TestCap_Name.Text),DisplayMode.Disabled,DisplayMode.Edit)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =If(New_TestCap,
+                
+                //Create new record in Test Capability List
+                IfError(
+                Patch(List_TestCapability,Defaults(List_TestCapability),
+                {
+                        LabOffice: Dropdown_TestCap_LabOffice.Selected.Title,
+                        TestName: TextInput_TestCap_Name.Text,
+                        TestDescription: TextInput_TestCap_Description.Text,
+                        TestRange: TextInput_TestCap_Range.Text,
+                        KeyEquipment:TextInput_TestCap_Equipment.Text,
+                        Standard: TextInput_TestCap_Standard.Text,
+                        TestMethod: TextInput_TestCap_Method.Text,
+                        Remark: TextInput_TestCap_Remark.Text},
+                        Update_Attachment_Form.Updates
+                );
+                ,
+                // show error notification
+                Notify(
+                    "New record could not be added",NotificationType.Error
+                ),
+                // show success notification
+                Notify(
+                    "New record added successfully",NotificationType.Success
+                );
+                ),
+                //Save existing record in Test Capability List
+                IfError(
+                Patch(List_TestCapability, LookUp(List_TestCapability, ID=Var_TestCap_Record.ID),
+                {
+                   LabOffice: Text(Dropdown_TestCap_LabOffice.Selected.Title),
+                   TestName: TextInput_TestCap_Name.Text,
+                   TestDescription: TextInput_TestCap_Description.Text,
+                   TestRange: TextInput_TestCap_Range.Text,
+                   KeyEquipment:TextInput_TestCap_Equipment.Text,
+                   Standard: TextInput_TestCap_Standard.Text,
+                   TestMethod: TextInput_TestCap_Method.Text,
+                   Remark: TextInput_TestCap_Remark.Text},
+                   Update_Attachment_Form.Updates
+                   );
+                ,
+                // show error notification
+                Notify(
+                    "Record could not be updated",NotificationType.Error
+                ),
+                // show success notification
+                Notify(
+                    "Record has been updated successfully",NotificationType.Success
+                ))
+                );
+                
+                
+                /*
+                //Update Attachment field in Test Capability List
+                Patch(List_TestCapability, LookUp(List_TestCapability, ID=Var_TestCap_Record.ID),
+                    Update_Attachment_Form.Updates);
+                */
+                
+                
+                //Reset Variables
+                Set(Var_TestCap_Record,Blank());
+                UpdateContext({Show_TestCap:false, New_TestCap:false, Edit_TestCap:false});
+                
+                //Refresh Data Source & Reset Gallery
+                Refresh(List_TestCapability);
+                Reset(galHidden_TestCap);
+                Reset(Gallery_TestCap);
+                
+                //Reset Controls
+                Reset(Dropdown_TestCap_LabOffice);
+                Reset(TextInput_TestCap_Name);
+                Reset(TextInput_TestCap_Description);
+                Reset(TextInput_TestCap_Range);
+                Reset(TextInput_TestCap_Equipment);
+                Reset(TextInput_TestCap_Standard);
+                Reset(TextInput_TestCap_Method);
+                Reset(TextInput_TestCap_Remark);
+                Reset(TextInput_TestCap_ModifiedDate);
+                ResetForm(Update_Attachment_Form);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            Text: ="Save"
+            Tooltip: ="Please ensure all the required fields * are filled up."
+            Visible: =New_TestCap Or Edit_TestCap
+            X: =383
+            Y: =605
+            ZIndex: =23
+
+        Icn_TestCap_Edit As icon.Edit:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =35
+            Icon: =Icon.Edit
+            OnSelect: |-
+                =UpdateContext({Edit_TestCap: true});
+            Tooltip: ="Edit Record"
+            Visible: =!New_TestCap
+            Width: =35
+            X: =891
+            Y: =90
+            ZIndex: =24
+
+        "Gal_TestCap_View_Attachments As gallery.'BrowseLayout_Vertical_OneTextVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
+            DelayItemLoading: =true
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =157
+            Items: =Var_TestCap_Record.Attachments
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =6
+            TemplateSize: =32
+            Visible: |-
+                =//true
+                !New_TestCap And !Edit_TestCap
+            Width: =380
+            X: =825
+            Y: =488
+            ZIndex: =25
+
+            Lbl_Attachment_Name_Link As label:
+                Color: =gblAppColors.Primary_BlueGrey
+                FontWeight: =FontWeight.Semibold
+                Height: =30
+                OnSelect: =Launch(ThisItem.AbsoluteUri)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =10
+                Text: =ThisItem.DisplayName
+                Width: =360
+                X: =5
+                Y: =2
+                ZIndex: =1
+
+    Container_Dialog_Delete_TestCap As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.9)
+        Height: =768
+        Visible: =Delete_TestCap
+        Width: =1366
+        ZIndex: =19
+
+        Rect_BG_Dialog_Delete_TestCap As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =288
+            OnSelect: =
+            Width: =636
+            X: =315
+            Y: =230
+            ZIndex: =1
+
+        Icn_Close_Dialog_Delete_TestCap As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =// clear temp collection
+                Clear(Col_Temp_TestCapList);
+                // reset the gallery
+                Refresh(List_TestCapability);
+                Reset(galHidden_TestCap);
+                Reset(Gallery_TestCap);
+                
+                //close dialog box
+                UpdateContext({Delete_TestCap: false});
+            Width: =40
+            X: =895
+            Y: =239
+            ZIndex: =2
+
+        Lbl_Delete_TestCap_Message As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Semibold
+            Height: =64
+            LineHeight: =1.5
+            Text: ="Are you sure you want to delete "& CountRows(Col_Temp_TestCapList) &" selected record(s) from the Global Testing Capability list?"
+            Width: =462
+            X: =402
+            Y: =332
+            ZIndex: =3
+
+        Lbl_Delete_TestCap_Hdr As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            LineHeight: =1.5
+            Size: =18
+            Text: ="Confirm Deletion"
+            Width: =462
+            X: =402
+            Y: =256
+            ZIndex: =4
+
+        Btn_Delete_TestCap_Confirm As button:
+            BorderColor: =gblAppColors.Primary_Orange
+            DisabledBorderColor: =varAppStyles.Button_Reject.DisabledBorderColor
+            DisabledColor: =varAppStyles.Button_Reject.DisabledColor
+            DisabledFill: =varAppStyles.Button_Reject.DisabledFill
+            Fill: =gblAppColors.Primary_Orange
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Reject.Font
+            HoverFill: =ColorFade(gblAppColors.Primary_Orange,-20%)
+            OnSelect: |-
+                =// delete record(s) from sharepoint list
+                ForAll(Col_Temp_TestCapList,RemoveIf(List_TestCapability,ID=Value));
+                // show a success notification
+                Notify($"{CountRows(Col_Temp_TestCapList)} record(s) deleted successfully",NotificationType.Success);
+                // clear temp collection
+                Clear(Col_Temp_TestCapList);
+                // reset the gallery
+                Refresh(List_TestCapability);
+                Reset(galHidden_TestCap);
+                Reset(Gallery_TestCap);
+                //close dialog box
+                UpdateContext({Delete_TestCap: false });
+            PressedBorderColor: =varAppStyles.Button_Reject.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Reject.PressedColor
+            PressedFill: =varAppStyles.Button_Reject.PressedFill
+            Text: ="Confirm"
+            X: =553
+            Y: =426
+            ZIndex: =5
+
+    Container_Dialog_Import_TestCap As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(202, 202, 202, 0.75)
+        Height: =768
+        Visible: =Import_TestCap
+        Width: =1366
+        ZIndex: =20
+
+        Rect_BG_Dialog_Import_TestCap As rectangle:
+            BorderColor: =gblAppColors.Primary_BlueGrey
+            BorderThickness: =1
+            Fill: =gblAppColors.Primary_Sand
+            Height: =385
+            Width: =636
+            X: =315
+            Y: =230
+            ZIndex: =1
+
+        Icn_Close_Dialog_Import_TestCap As icon.Cancel:
+            Color: =gblAppColors.Primary_BlueGrey
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =UpdateContext({Import_TestCap: false});
+                ResetForm(Import_Attachment_Form);
+            Width: =40
+            X: =895
+            Y: =239
+            ZIndex: =2
+
+        Lbl_Import_TestCap_Hdr As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            LineHeight: =1.5
+            Size: =18
+            Text: ="Add Attachment(s)"
+            Width: =462
+            X: =402
+            Y: =244
+            ZIndex: =4
+
+        Btn_Import_TestCap_Confirm As button:
+            BorderColor: =varAppStyles.Button_Save.BorderColor
+            DisabledBorderColor: =gblAppColors.GrayMediumDark
+            DisabledColor: =varAppStyles.Button_Save.DisabledColor
+            DisabledFill: =varAppStyles.Button_Save.DisabledFill
+            DisplayMode: =If(CountRows(Import_Attachment_DataCardValue.Attachments)>0,DisplayMode.Edit, DisplayMode.Disabled)
+            Fill: =varAppStyles.Button_Save.Fill
+            FocusedBorderThickness: =2
+            Font: =varAppStyles.Button_Save.Font
+            HoverBorderColor: =gblAppColors.Primary_LightSand
+            HoverFill: =varAppStyles.Button_Save.HoverFill
+            OnSelect: |-
+                =// upload file attachments into sharepoint list items
+                ForAll(Col_Temp_TestCapList,
+                    Patch(List_TestCapability, LookUp(List_TestCapability, ID=Value),
+                    Import_Attachment_Form.Updates);
+                );
+                
+                // show a success notification
+                Notify(
+                    $"{CountRows(Import_Attachment_DataCardValue.Attachments)} file(s) uploaded into {CountRows(Col_Temp_TestCapList)} record(s) successfully",NotificationType.Success
+                );
+                
+                
+                // clear temp collection
+                Clear(Col_Temp_TestCapList);
+                
+                // Refresh data source
+                Refresh(List_TestCapability);
+                Reset(galHidden_TestCap);
+                Reset(Gallery_TestCap);
+                
+                //close dialog box
+                UpdateContext({Import_TestCap: false});
+                //reset attachment form
+                ResetForm(Import_Attachment_Form);
+            PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+            PressedColor: =varAppStyles.Button_Save.PressedColor
+            PressedFill: =varAppStyles.Button_Save.PressedFill
+            Text: ="Save"
+            Tooltip: ="Attach one or more file(s) before saving."
+            X: =553
+            Y: =553
+            ZIndex: =5
+
+        Import_Attachment_Form As form:
+            DataSource: =List_TestCapability
+            DefaultMode: =FormMode.New
+            Height: =251
+            Width: =553
+            X: =360
+            Y: =302
+            ZIndex: =6
+
+            Import_Attachments_DataCard As typedDataCard.attachmentsEditCard:
+                BorderColor: =gblAppColors.Primary_BlueGrey
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="{Attachments}"
+                Default: =ThisItem.Attachments
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@List_TestCapability],DataSourceInfo.DisplayName,Attachments)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =178
+                Required: =false
+                Update: =Import_Attachment_DataCardValue.Attachments
+                Width: =552
+                X: =0
+                Y: =0
+                ZIndex: =7
+
+                Import_Attachment_DataCardKey As label:
+                    AutoHeight: =true
+                    Color: =gblAppColors.Primary_BlueGrey
+                    Font: =gblAppFonts.Body
+                    FontWeight: =FontWeight.Semibold
+                    Height: =34
+                    Size: =11
+                    Text: ="Upload max. 5 files below"
+                    Width: =Parent.Width - 60
+                    Wrap: =false
+                    X: =16
+                    Y: =6
+                    ZIndex: =1
+
+                Import_Attachment_DataCardValue As attachments:
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    DisabledBorderColor: =gblAppDefaults.DisabledBorderColor
+                    DisabledColor: =gblAppDefaults.DisabledColor
+                    DisabledFill: =gblAppDefaults.DisabledFill
+                    DisplayMode: =Parent.DisplayMode
+                    FocusedBorderThickness: =2
+                    Font: =gblAppFonts.Body
+                    Height: =185
+                    HoverFill: =gblAppColors.Primary_LightSand
+                    IsInDataCard: =true
+                    ItemHoverFill: =gblAppColors.Primary_LightSand
+                    Items: =Parent.Default
+                    MaxAttachments: =5
+                    PaddingBottom: =5
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
+                    PressedFill: =gblAppColors.Primary_BlueGrey
+                    Size: =10
+                    Tooltip: =Parent.DisplayName
+                    Width: =520
+                    X: =17
+                    Y: =43
+                    ZIndex: =2
+
+                Import_Attachment_ErrorMessage As label:
+                    AutoHeight: =true
+                    Color: =gblAppColors.Red
+                    Height: =10
+                    Live: =Live.Assertive
+                    PaddingBottom: =0
+                    PaddingLeft: =0
+                    PaddingRight: =0
+                    PaddingTop: =0
+                    Text: =Parent.Error
+                    Visible: =Parent.DisplayMode=DisplayMode.Edit
+                    Width: =Parent.Width - 60
+                    X: =30
+                    Y: =Import_Attachment_DataCardValue.Y + Import_Attachment_DataCardValue.Height
+                    ZIndex: =3
+
+                Import_Attachment_StarVisible As label:
+                    Align: =Align.Center
+                    Height: =Import_Attachment_DataCardKey.Height
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Wrap: =false
+                    Y: =Import_Attachment_DataCardKey.Y
+                    ZIndex: =4
+
+    Lbl_DEBUG As label:
+        Align: =Align.Right
+        Height: =34
+        Size: =8
+        Text: ="Admin"
+        Visible: =Not(VarNotAdmin)
+        Width: =117
+        X: =1159
+        Y: =18
+        ZIndex: =21
+
+    Grp_Pagination_Gal_TestCap As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =22
+
+        Icn_Next_GalTestCap As icon.ArrowRight:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                TbList_PaginationSize_Gal_TestCap.Selected.Value * varPageNumber_Gal_TestCap <= CountRows(galHidden_TestCap.AllItems),
+                DisplayMode.Edit,
+                DisplayMode.Disabled
+                )
+            Height: =25
+            Icon: =Icon.ArrowRight
+            OnSelect: =Set(varPageNumber_Gal_TestCap,varPageNumber_Gal_TestCap+1)
+            Tooltip: ="Next Page"
+            Width: =25
+            X: =789
+            Y: =729
+            ZIndex: =10
+
+        Icn_Back_GalTestCap As icon.ArrowLeft:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                varPageNumber_Gal_TestCap = 1,
+                DisplayMode.Disabled,
+                DisplayMode.Edit
+                )
+            Height: =25
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Set(varPageNumber_Gal_TestCap,varPageNumber_Gal_TestCap-1)
+            Tooltip: ="Previous Page"
+            Width: =25
+            X: =607
+            Y: =729
+            ZIndex: =11
+
+        Icn_Left_GalTestCap As icon.ChevronLeft:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                varPageNumber_Gal_TestCap = 1,
+                DisplayMode.Disabled,
+                DisplayMode.Edit
+                )
+            Height: =17
+            Icon: =Icon.ChevronLeft
+            OnSelect: =Set(varPageNumber_Gal_TestCap,1)
+            Tooltip: ="Skip to start"
+            Width: =25
+            X: =575
+            Y: =733
+            ZIndex: =12
+
+        Icn_Right_GalTestCap As icon.ChevronRight:
+            Color: =gblAppColors.Primary_BlueGrey
+            DisabledColor: =gblAppDefaults.DisabledColor
+            DisplayMode: |-
+                =If(
+                TbList_PaginationSize_Gal_TestCap.Selected.Value * varPageNumber_Gal_TestCap <= CountRows(galHidden_TestCap.AllItems),
+                DisplayMode.Edit,
+                DisplayMode.Disabled
+                )
+            Height: =17
+            Icon: =Icon.ChevronRight
+            OnSelect: =Set(varPageNumber_Gal_TestCap, RoundUp( CountRows(galHidden_TestCap.AllItems) / TbList_PaginationSize_Gal_TestCap.Selected.Value ,0) )
+            Tooltip: ="Skip to end"
+            Width: =25
+            X: =821
+            Y: =733
+            ZIndex: =13
+
+        Lbl_Pagination_GalTestCap As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =30
+            PaddingLeft: =3
+            PaddingRight: =3
+            Size: =9
+            Text: |-
+                ="Page " & varPageNumber_Gal_TestCap & " of " & If(
+                Mod(
+                CountRows(galHidden_TestCap.AllItems),
+                100
+                ) = 0,
+                RoundUp( CountRows(galHidden_TestCap.AllItems) / TbList_PaginationSize_Gal_TestCap.Selected.Value ,0) & "+ pages",
+                RoundUp( CountRows(galHidden_TestCap.AllItems) / TbList_PaginationSize_Gal_TestCap.Selected.Value,0) & " page(s)"
+                )
+            Width: =160
+            X: =630
+            Y: =727
+            ZIndex: =14
+
+        "TbList_PaginationSize_Gal_TestCap As 'Tab list'.pcfdataset":
+            BasePaletteColor: =RGBA(141, 229, 250, 1)
+            DefaultSelectedItems: =[50]
+            DisplayMode: =DisplayMode.Edit
+            Font: =gblAppFonts.Body
+            FontSize: =11
+            FontWeight: =FontWeight.Normal
+            Height: =29
+            Items: =[5,10,20,50]
+            OnSelect: =Set(varPageNumber_Gal_TestCap,1)
+            Size: ='TabList.Size'.Small
+            Width: =170
+            X: =151
+            Y: =727
+            ZIndex: =15
+
+        Lbl_Pagination_DisplayStart_TestCap As label:
+            Align: =Align.Center
+            Font: =gblAppFonts.Body
+            Height: =27
+            Size: =8
+            Text: |-
+                ="Display :"
+            Width: =60
+            X: =97
+            Y: =729
+            ZIndex: =16
+
+        Lbl_Pagination_DisplayEntries_TestCap As label:
+            Align: =Align.Center
+            Fill: =RGBA(237, 237, 237, 1)
+            Font: =gblAppFonts.Body
+            Height: =27
+            Size: =8
+            Text: ="entries"
+            Width: =49
+            X: =264
+            Y: =729
+            ZIndex: =17
+

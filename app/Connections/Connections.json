@@ -1,0 +1,248 @@
+{
+  "2e71d9f7-04b1-405a-865a-d6611ca9293b": {
+    "appActions": [
+      "ListGroupMembers"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365 Groups",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1681/1.0.1681.3662/office365groups/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365groups",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [
+      "Office365Groups"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "2e71d9f7-04b1-405a-865a-d6611ca9293b"
+  },
+  "3e89cbb8-705b-4377-b1ef-b76b3ab5310e": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Excel Online (Business)",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1694/1.0.1694.3752/excelonlinebusiness/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_excelonlinebusiness",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "sites%252Fjehl.sharepoint.com%252Ceba5c2fa-ad3d-4f13-81bb-200534422c19%252Cac6ec0fe-3a58-44b0-b00e-a1990447e9b9,b%2521-sKl6z2tE0-BuyAFNEIsGf7AbqxYOrBEsA6hmQRH6bkdeZHiUbm4Q7tq27u8_l0E,0122V223TSZUIGU2XDEBG2MLZ2F7ARLMZ4": {
+        "dataSources": {
+          "ImportContactTable": {
+            "tableName": "{59539984-B2B5-4B7A-A187-E981464F30AB}"
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "ImportContactTable"
+    ],
+    "dependencies": {},
+    "dependents": [
+      "85a3bdeb-a975-4021-899f-70d14d6e93b2"
+    ],
+    "id": "3e89cbb8-705b-4377-b1ef-b76b3ab5310e"
+  },
+  "72b732e0-aa80-4333-a910-408590a05628": {
+    "appActions": [],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Excel Online (Business)",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1694/1.0.1694.3752/excelonlinebusiness/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_excelonlinebusiness",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [],
+    "dependencies": {},
+    "dependents": [
+      "85a3bdeb-a975-4021-899f-70d14d6e93b2"
+    ],
+    "id": "72b732e0-aa80-4333-a910-408590a05628"
+  },
+  "7d1c0767-ed01-41bc-b181-5886430514bf": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read",
+      "providers/PowerPlatform.Governance/Operations/Write",
+      "providers/PowerPlatform.Governance/Operations/Delete"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1694/1.0.1694.3752/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://jehl.sharepoint.com/sites/WorkflowDevelopment-DEV-GlobalTestingCapability": {
+        "dataSources": {
+          "List_LabContact": {
+            "tableName": "cc6a13fb-f88b-401a-8fd3-5e6039c971fc"
+          },
+          "List_TestEquipment": {
+            "tableName": "2dcba5b0-8c82-402c-b87c-d9a16668a8de"
+          },
+          "List_TestSchedule": {
+            "tableName": "16912407-6c99-4509-beba-a87bbd658fe1"
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "List_LabContact",
+      "List_TestSchedule",
+      "List_TestEquipment"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "7d1c0767-ed01-41bc-b181-5886430514bf"
+  },
+  "7f593813-281d-422a-af80-89b78561287a": {
+    "appActions": [
+      "UserPhotoMetadata",
+      "UserPhoto_V2",
+      "SearchUser",
+      "UserProfile_V2"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365 Users",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1694/1.0.1694.3752/office365users/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365users",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [
+      "Office365Users"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "7f593813-281d-422a-af80-89b78561287a"
+  },
+  "85a3bdeb-a975-4021-899f-70d14d6e93b2": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logic flows",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1697/1.0.1697.3780/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "3e89cbb8-705b-4377-b1ef-b76b3ab5310e": {
+          "value": "shared_excelonlinebusiness_1"
+        },
+        "72b732e0-aa80-4333-a910-408590a05628": {
+          "value": "shared_excelonlinebusiness_2"
+        },
+        "deba5e30-d40b-485f-aa8f-ea5953e6a6c1": {
+          "value": "shared_sharepointonline"
+        },
+        "workflowDisplayName": {
+          "value": "DEV_GTC_UploadExcel_ImportContactList"
+        },
+        "workflowEntityId": {},
+        "workflowName": {
+          "value": "3ae322a9-e526-46df-b06f-eaaf44db4c71"
+        }
+      },
+      "parameterHintsV2": {
+        "shared_excelonlinebusiness_1": {
+          "value": "3e89cbb8-705b-4377-b1ef-b76b3ab5310e"
+        },
+        "shared_excelonlinebusiness_2": {
+          "value": "72b732e0-aa80-4333-a910-408590a05628"
+        },
+        "shared_sharepointonline": {
+          "value": "deba5e30-d40b-485f-aa8f-ea5953e6a6c1"
+        },
+        "workflowDisplayName": {
+          "value": "DEV_GTC_UploadExcel_ImportContactList"
+        },
+        "workflowEntityId": {},
+        "workflowName": {
+          "value": "3ae322a9-e526-46df-b06f-eaaf44db4c71"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "DEV_GTC_UploadExcel_ImportContactList"
+    ],
+    "dependencies": {
+      "shared_excelonlinebusiness_1": "3e89cbb8-705b-4377-b1ef-b76b3ab5310e",
+      "shared_excelonlinebusiness_2": "72b732e0-aa80-4333-a910-408590a05628",
+      "shared_sharepointonline": "deba5e30-d40b-485f-aa8f-ea5953e6a6c1"
+    },
+    "dependents": [],
+    "id": "85a3bdeb-a975-4021-899f-70d14d6e93b2"
+  },
+  "deba5e30-d40b-485f-aa8f-ea5953e6a6c1": {
+    "appActions": [],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1694/1.0.1694.3752/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [],
+    "dependencies": {},
+    "dependents": [
+      "85a3bdeb-a975-4021-899f-70d14d6e93b2"
+    ],
+    "id": "deba5e30-d40b-485f-aa8f-ea5953e6a6c1"
+  },
+  "fa134209-142f-404d-9de2-e47ef81d4f53": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read",
+      "providers/PowerPlatform.Governance/Operations/Write",
+      "providers/PowerPlatform.Governance/Operations/Delete"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1694/1.0.1694.3752/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://jehl.sharepoint.com/sites/WorkflowDevelopment-DEV-GlobalTestingCapability": {
+        "dataSources": {
+          "Config_General": {
+            "tableName": "0ee27189-a8df-4944-b962-8a61b99b7414"
+          },
+          "Config_LabOffices": {
+            "tableName": "5efcbc60-f958-42cc-9e68-2ea2e48b51d6"
+          },
+          "List_TestCapability": {
+            "tableName": "b423c009-9e9c-4b08-9296-fbaa8f040377"
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "Config_General",
+      "List_TestCapability",
+      "Config_LabOffices",
+      "List_TestEquipment",
+      "List_LabContact",
+      "List_TestSchedule"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "fa134209-142f-404d-9de2-e47ef81d4f53"
+  }
+}

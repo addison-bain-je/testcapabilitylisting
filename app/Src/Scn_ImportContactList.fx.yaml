@@ -1,0 +1,537 @@
+Scn_ImportContactList As screen:
+    Fill: =RGBA(237, 237, 237, 1)
+    LoadingSpinner: =LoadingSpinner.Controls
+    LoadingSpinnerColor: =gblAppColors.Primary_BlueGrey
+    OnVisible: |-
+        =//Enable Loading Spinner
+        Set(VarLoadSpinner,true);
+        
+        UpdateContext({dm_AttachmentCtrl_ImportContactFile: DisplayMode.Edit});
+        Reset(Attachment_UploadFile_ContactList);
+        
+        //Clear Import Collections
+        Clear(Col_ImportContactList);
+        Clear(Col_ImportContactList_Outcome);
+        
+        //Disable Loading Spinner
+        Set(VarLoadSpinner,false);
+
+    cmp_SideNav_Scn_Settings_1 As cmp_SideNav:
+        Default: ="Settings"
+        Y: =68
+
+    cmp_TopBar_Settings_1 As cmp_TopBar:
+        ZIndex: =2
+
+    "Gallery_ImportContactList As gallery.'BrowseLayout_Vertical_ThreeTextVariant_ver5.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        BorderColor: =gblAppColors.Primary_BlueGrey
+        BorderThickness: =1
+        DelayItemLoading: =true
+        Height: =505
+        Items: =Col_ImportContactList_Outcome
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplatePadding: =0
+        TemplateSize: =60
+        Width: =1256
+        X: =97
+        Y: =205
+        ZIndex: =3
+
+        Lbl_Gal_ImportTestContact_Team As label:
+            Color: =RGBA(0, 0, 0, 1)
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =20
+            OnSelect: =
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.Team
+            Width: =90
+            X: =146
+            Y: =19
+            ZIndex: =1
+
+        Lbl_Gal_ImportTestContact_Lab As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =20
+            LineHeight: =1
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.Lab
+            Width: =100
+            X: =33
+            Y: =19
+            ZIndex: =3
+
+        Gal_ImportTestContact_Seperator As rectangle:
+            Fill: =gblAppColors.Primary_White
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - Self.Height
+            ZIndex: =5
+
+        Lbl_Gal_ImportTestContact_ContactNo As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =20
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.ContactNo
+            Width: =110
+            X: =527
+            Y: =19
+            ZIndex: =8
+
+        Lbl_Gal_ImportTestContact_JEContact As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: =Select(Parent)
+            Overflow: =Overflow.Scroll
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: |-
+                =Substitute(ThisItem.ContactEmail,"mailto:","")
+            Width: =250
+            X: =259
+            Y: =9
+            ZIndex: =9
+
+        Lbl_Gal_ImportTestContact_RowNum As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =20
+            LineHeight: =1
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.RowNumber
+            Width: =34
+            X: =13
+            Y: =19
+            ZIndex: =11
+
+        Lbl_Gal_ImportContactList_Status As label:
+            DisplayMode: =DisplayMode.View
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            Height: =31
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.Status
+            Width: =58
+            X: =979
+            Y: =9
+            ZIndex: =12
+
+        Lbl_Gal_TestContact_CCHead As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: =Select(Parent)
+            Overflow: =Overflow.Scroll
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: |-
+                =Substitute(ThisItem.CCHeadEmail,"mailto:","")
+            Width: =250
+            X: =681
+            Y: =9
+            ZIndex: =13
+
+        Icn_Gal_ImportContactList_Status As icon.CheckBadge:
+            Color: |-
+                =Switch(ThisItem.Status,
+                    "Success",gblAppColors.Secondary_Green,
+                    "Error",gblAppColors.Red,
+                    gblAppColors.Primary_Orange)
+            DisplayMode: =DisplayMode.View
+            Height: =15
+            Icon: |-
+                =Switch(ThisItem.Status,
+                    "Success",Icon.CheckBadge,
+                    "Error",Icon.Error,
+                    Icon.Sync)
+            OnSelect: =Select(Parent)
+            Visible: |-
+                =If(CountRows(Col_ImportContactList_Outcome)=0,
+                false,true)
+            Width: =15
+            X: =956
+            Y: =17
+            ZIndex: =14
+
+        Gal_ImportContactList_UploadRemarks As label:
+            FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+            OnSelect: =Select(Parent)
+            Overflow: =Overflow.Scroll
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =ThisItem.StatusRemarks
+            Width: =181
+            X: =1067
+            Y: =9
+            ZIndex: =15
+
+    Container_Gallery_TestContact_2 As groupContainer.manualLayoutContainer:
+        Fill: =gblAppColors.Primary_LightSand
+        Height: =26
+        Width: =1256
+        X: =97
+        Y: =177
+        ZIndex: =4
+
+        Lbl_Gal_TestContact_Lab_2 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Lab Office"
+            Width: =90
+            X: =11
+            ZIndex: =1
+
+        Lbl_Gal_TestContact_Team_2 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Team"
+            Width: =113
+            X: =114
+            ZIndex: =2
+
+        Lbl_Gal_TestContact_ContactNo_2 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Contact No."
+            Width: =100
+            X: =518
+            ZIndex: =3
+
+        Lbl_Gal_TestContact_JEContactPerson_2 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="JE Contact Person (Email)"
+            Width: =183
+            X: =267
+            ZIndex: =4
+
+        Lbl_Gal_TestContact_JECCHead_4 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="JE Cost Center Head (Email)"
+            Width: =204
+            X: =683
+            ZIndex: =5
+
+        Lbl_Gal_TestContact_JECCHead_5 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Status"
+            Width: =100
+            X: =946
+            ZIndex: =6
+
+        Lbl_Gal_TestContact_JECCHead_6 As label:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            Size: =10
+            Text: ="Import Remarks"
+            X: =1081
+            ZIndex: =7
+
+    Lbl_Scn_ImportContactList_Hdr_2 As label:
+        Align: =Align.Right
+        Font: ="Helvatica, Segoe UI"
+        FontWeight: =FontWeight.Bold
+        Height: =79
+        LineHeight: =1.5
+        Size: =20
+        Text: |-
+            ="Lab Contact List
+            Data Import Status"
+        Width: =594
+        X: =755
+        Y: =84
+        ZIndex: =6
+
+    Lbl_Scn_ImportContactList_Hdr As label:
+        Align: =Align.Center
+        Font: ="Helvatica, Segoe UI"
+        FontWeight: =FontWeight.Bold
+        Height: =57
+        Size: =28
+        Text: |-
+            ="Data Import
+            "
+        Width: =355
+        X: =547
+        Y: =6
+        ZIndex: =7
+
+    Btn_Import_ImportContactList As button:
+        BorderColor: =varAppStyles.Button_Approve.BorderColor
+        DisabledBorderColor: =varAppStyles.Button_Approve.DisabledBorderColor
+        DisabledColor: =varAppStyles.Button_Approve.DisabledColor
+        DisabledFill: =varAppStyles.Button_Approve.DisabledFill
+        DisplayMode: =If(CountRows(Col_ImportContactList_Outcome)>0 And CountRows(Col_ImportContactList)>0 And CountRows(Attachment_UploadFile_ContactList.Attachments)>0,DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =varAppStyles.Button_Approve.Fill
+        FocusedBorderColor: =varAppStyles.Button_Approve.FocusedBorderColor
+        FocusedBorderThickness: =2
+        Font: =varAppStyles.Button_Approve.Font
+        Height: =28
+        HoverBorderColor: =varAppStyles.Button_Approve.HoverBorderColor
+        HoverColor: =varAppStyles.Button_Approve.HoverColor
+        HoverFill: =varAppStyles.Button_Approve.HoverFill
+        OnSelect: |-
+            =ForAll(
+                Col_ImportContactList As ImportContactRecord,
+                IfError(
+                Patch(List_LabContact, Defaults(List_LabContact),
+                {
+                    Lab: ImportContactRecord.Lab,
+                    Team: ImportContactRecord.Team,
+                    ContactNo: ImportContactRecord.ContactNo,
+                    ContactName:
+                        ForAll(
+                        TrimEnds(Split(Substitute(ImportContactRecord.ContactEmail,"mailto:",""), ";" )),
+                        {
+                        Claims: "i:0#.f|membership|" & ThisRecord.Value,
+                        Department: "",
+                        DisplayName: Office365Users.UserProfileV2(ThisRecord.Value).displayName,
+                        Email: ThisRecord.Value,
+                        JobTitle: ".",
+                        Picture: "."
+                        }
+                        ),
+                    ContactEmail: Substitute(ImportContactRecord.ContactEmail,"mailto:",""),
+                    CCHeadName:
+                        ForAll(
+                        TrimEnds(Split(Substitute(ImportContactRecord.CCHeadEmail,"mailto:",""), ";" )),
+                        {
+                        Claims: "i:0#.f|membership|" & ThisRecord.Value,
+                        Department: "",
+                        DisplayName: Office365Users.UserProfileV2(ThisRecord.Value).displayName,
+                        Email: ThisRecord.Value,
+                        JobTitle: ".",
+                        Picture: "."
+                        }
+                        ),
+                    CCHeadEmail: Substitute(ImportContactRecord.CCHeadEmail,"mailto:",""),
+                    SocialMessaging: ImportContactRecord.SocialMessaging
+                }),
+                Patch(Col_ImportContactList_Outcome, LookUp(Col_ImportContactList_Outcome,RowNumber=ImportContactRecord.RowNumber),
+                        {Status: "Failed",
+                        StatusRemarks: FirstError.Source & ": " & FirstError.Message}
+                ),
+                Patch(Col_ImportContactList_Outcome, LookUp(Col_ImportContactList_Outcome,RowNumber=ImportContactRecord.RowNumber),
+                        {Status: "Success"}
+                )
+                )
+            );
+            
+            Clear(Col_ImportContactList);
+            Reset(Attachment_UploadFile_ContactList);
+        PressedBorderColor: =varAppStyles.Button_Approve.PressedBorderColor
+        PressedColor: =varAppStyles.Button_Approve.PressedColor
+        PressedFill: =varAppStyles.Button_Approve.PressedFill
+        Size: =9
+        Text: ="Import Data"
+        Width: =120
+        X: =415
+        Y: =130
+        ZIndex: =8
+
+    Btn_UploadExcel_ImportContactList As button:
+        BorderColor: =varAppStyles.Button_Save.BorderColor
+        DisabledBorderColor: =varAppStyles.Button_Save.DisabledBorderColor
+        DisabledColor: =varAppStyles.Button_Save.DisabledColor
+        DisabledFill: =varAppStyles.Button_Save.DisabledFill
+        DisplayMode: =If(CountRows(Attachment_UploadFile_ContactList.Attachments)>0 And EndsWith(First(Attachment_UploadFile_ContactList.Attachments).Name,".xlsx"),DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =varAppStyles.Button_Save.Fill
+        FocusedBorderColor: =varAppStyles.Button_Save.FocusedBorderColor
+        FocusedBorderThickness: =2
+        Font: =varAppStyles.Button_Save.Font
+        Height: =28
+        HoverBorderColor: =varAppStyles.Button_Save.HoverBorderColor
+        HoverColor: =varAppStyles.Button_Save.HoverColor
+        HoverFill: =varAppStyles.Button_Save.HoverFill
+        OnSelect: |-
+            =UpdateContext({dm_AttachmentCtrl_ImportContactFile: DisplayMode.Disabled});
+            
+            DEV_GTC_UploadExcel_ImportContactList.Run(
+                 {
+                     contentBytes: First(Attachment_UploadFile_ContactList.Attachments).Value,
+                     name: First(Attachment_UploadFile_ContactList.Attachments).Name
+                 }
+            );
+            
+            Refresh(ImportContactTable);
+            ClearCollect(
+                Col_ImportContactList,
+                ForAll(
+                    Sequence(CountRows(ImportContactTable)),
+                    Patch(
+                        Index(
+                           ImportContactTable, 
+                           Value
+                        ),
+                        {RowNumber: Value,
+                         Status: "Pending",
+                         StatusRemarks: ""
+                        }
+                    )
+                )
+            );
+            
+            ClearCollect(
+                Col_ImportContactList_Outcome, Col_ImportContactList);
+            
+            ClearCollect(
+                Col_ImportContactList,
+                ForAll(
+                    Sequence(CountRows(ImportContactTable)),
+                    Patch(
+                        Index(
+                           ImportContactTable, 
+                           Value
+                        ),
+                        {RowNumber: Value,
+                         Status: "Pending",
+                         StatusRemarks: ""
+                        }
+                    )
+                )
+            );
+            
+            ClearCollect(
+                Col_ImportContactList_Outcome, Col_ImportContactList);
+            
+            UpdateContext({dm_AttachmentCtrl_ImportContactFile: DisplayMode.Edit});
+        PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+        PressedColor: =varAppStyles.Button_Save.PressedColor
+        PressedFill: =varAppStyles.Button_Save.PressedFill
+        Size: =9
+        Text: ="Upload File"
+        Width: =120
+        X: =415
+        Y: =90
+        ZIndex: =14
+
+    Attachment_UploadFile_ContactList As attachments:
+        AddAttachmentText: ="Attach Excel file (.xlsx) here"
+        AddedItemColor: =RGBA(0, 0, 0, 1)
+        BorderColor: =
+        Color: |-
+            =RGBA(0, 0, 0, 1)
+            //If(CountRows(Attachment_UploadFile_ContactList.Attachments)=0,RGBA(0, 0, 0, 1),RGBA(0, 0, 0, 0))
+        DisplayMode: =dm_AttachmentCtrl_ImportContactFile
+        FocusedBorderThickness: =2
+        Height: =80
+        IsInDataCard: =true
+        Items: =
+        MaxAttachments: =1
+        NoAttachmentsText: ="Please limit to max. 50 rows in Excel template."
+        OnAddFile: |-
+            =Clear(Col_ImportContactList);
+            Clear(Col_ImportContactList_Outcome);
+        PaddingBottom: =5
+        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+        PaddingRight: =5
+        PaddingTop: =5
+        Size: =9
+        Tooltip: =
+        Width: =310
+        X: =97
+        Y: =84
+        ZIndex: =16
+
+    Icn_Scn_ImportContactList As icon.Phonebook:
+        Color: =Color.Black
+        DisplayMode: =DisplayMode.View
+        Height: =28
+        Icon: =LookUp(colSidebarMenu, Value="Contact",Icon)
+        Width: =25
+        X: =1111
+        Y: =90
+        ZIndex: =17
+
+    Btn_DownloadExcelTemplate_ImportContactList As button:
+        BorderColor: =varAppStyles.Button_Save.BorderColor
+        DisabledBorderColor: =varAppStyles.Button_Save.DisabledBorderColor
+        DisabledColor: =varAppStyles.Button_Save.DisabledColor
+        DisabledFill: =varAppStyles.Button_Save.DisabledFill
+        Fill: =varAppStyles.Button_Save.Fill
+        FocusedBorderColor: =varAppStyles.Button_Save.FocusedBorderColor
+        FocusedBorderThickness: =2
+        Font: =varAppStyles.Button_Save.Font
+        Height: =28
+        HoverBorderColor: =varAppStyles.Button_Save.HoverBorderColor
+        HoverColor: =varAppStyles.Button_Save.HoverColor
+        HoverFill: =varAppStyles.Button_Save.HoverFill
+        OnSelect: =Download(LookUp(Config_General,Title="ExcelTemplate_Import_ContactList",String_Value))
+        PressedBorderColor: =varAppStyles.Button_Save.PressedBorderColor
+        PressedColor: =varAppStyles.Button_Save.PressedColor
+        PressedFill: =varAppStyles.Button_Save.PressedFill
+        Size: =9
+        Text: ="Download Template"
+        Tooltip: =LookUp(Config_General,Title="ExcelTemplate_Import_ContactList",String_Value)
+        Width: =130
+        X: =966
+        Y: =90
+        ZIndex: =18
+
+    Grp_Loading_ImportList As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =21
+
+        Rect_Load_ImportList As rectangle:
+            Fill: =RGBA(161, 154, 154, 0.75)
+            Height: =768
+            Visible: =If(dm_AttachmentCtrl_ImportContactFile=DisplayMode.Disabled,true,false)
+            Width: =1366
+            ZIndex: =19
+
+        Img_Loader_ImportList As image:
+            Height: =120
+            Image: ='Spinner-1s-200px'
+            Visible: =If(dm_AttachmentCtrl_ImportContactFile=DisplayMode.Disabled,true,false)
+            X: =675
+            Y: =324
+            ZIndex: =20
+
