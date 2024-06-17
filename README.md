@@ -1,7 +1,7 @@
 # Introduction 
 
 SharePoint Lists containing Test Capabilities, Equipment Listing and Personnel Contacts records.
-Power Apps as Front-End for Users (Read-only) and Admins (CRUD)
+<br>Power Apps as Front-End for Users (Read-only) and Admins (CRUD)
 
 # Key Features
 <br>Searchable galleries
